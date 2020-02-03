@@ -3,8 +3,10 @@ package com.bruinfitness.android;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
@@ -12,6 +14,9 @@ import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
+    public SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy_MM_dd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(this, R.id.calendarView)
                 .range(startDate, endDate)
-                .datesNumberOnScreen(5)
+                .datesNumberOnScreen(7)
                 .configure()
                 .showTopText(false)
                 .textSize(12, 12, 12)
@@ -35,10 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @Override
-            //public void onDateSelected(Calendar date, int position) {
             public void onDateSelected(Calendar date, int position) {
-                //Toast.makeText(MainActivity.this, DateFormat.getDateInstance().format(date) + " is selected!", Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, "calendar click!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getDateString(date), Toast.LENGTH_SHORT).show();
+                Log.i(TAG, getDateString(date));
             }
 
             @Override
@@ -54,5 +58,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    public String getDateString (Calendar date){
+        return dateFormatter.format(date.getTime());
     }
 }
