@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        app:selectorColor="#000"/>
+        app:selectorColor="@color/colorPrimary"
+        app:textColorSelected="@color/colorPrimary"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -28,12 +29,12 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@color/colorPrimaryDark"
         android:layout_below="@id/sampleText"
-        app:cardCornerRadius="0dp"
+        app:cardCornerRadius="15dp"
         app:cardMaxElevation="1dp"
         app:cardElevation="0.7dp"
-        app:contentPadding="10dp"
+        app:contentPadding="0dp"
         app:contentPaddingBottom="0dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
@@ -52,7 +53,17 @@
             android:gravity="center_vertical"
             android:text="Card Text Here"
             android:id="@+id/sampleText2"
+            android:textColor="@android:color/white"
             android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_chevron_right_white_36"
+                android:gravity="center_vertical"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:fillColor="@android:color/white"/>
 
         <TextView
             android:layout_width="match_parent"

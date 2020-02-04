@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Your comment
     <color name="colorPrimary">#859398</color>
     <color name="colorPrimaryDark">#283048</color>
     <color name="colorPrimaryDarker">#1F263C</color>
+    <color name="colorPrimaryDarkest">#161C30</color>
+    <color name="colorCard">#000</color>
+    <color name="colorAccent">#D81B60</color>
+    -->
+    <color name="colorPrimary">#eef2f3</color>
+    <color name="colorPrimaryDark">#8e9eab</color>
+    <color name="colorPrimaryDarker">#36383A</color>
+    <color name="colorPrimaryDarkest">#161C30</color>
+    <color name="colorCard">#000</color>
     <color name="colorAccent">#D81B60</color>
 </resources>
