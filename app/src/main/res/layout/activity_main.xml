@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -21,66 +21,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/sampleText"
         android:text="@string/app_name"
-        android:layout_below="@id/calendarView"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:padding="15dp"/>
 
-    <androidx.cardview.widget.CardView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recview"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:cardBackgroundColor="@color/colorPrimaryDark"
-        android:layout_below="@id/sampleText"
-        app:cardCornerRadius="15dp"
-        app:cardMaxElevation="1dp"
-        app:cardElevation="0.7dp"
-        app:contentPadding="0dp"
-        app:contentPaddingBottom="0dp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true"
-        android:id="@+id/cardView">
+        android:layout_height="match_parent"
+        android:background="#fafafa" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center_vertical"
-            android:text="Card Text Here"
-            android:id="@+id/sampleText2"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/baseline_chevron_right_white_36"
-                android:gravity="center_vertical"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:fillColor="@android:color/white"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:fontFamily="sans-serif"
-            android:text="smaller text"
-            android:layout_below="@id/sampleText2"
-            android:id="@+id/sampleText3"
-            android:textSize="14sp" />
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-
-
-    </RelativeLayout>
+    </LinearLayout>

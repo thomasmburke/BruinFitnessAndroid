@@ -1,13 +1,19 @@
 package com.bruinfitness.android;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import android.graphics.Movie;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.HorizontalCalendarView;
@@ -58,6 +64,23 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //Set up sample workout list
+        List<Workout> workoutList = new ArrayList<>();
+        workoutList.add(new Workout("CrossFit", "Diane", "Work Hard", "21-15-9 reps of: 225-pound Deadlifts"));
+        workoutList.add(new Workout("Gymnastics", "No Name", "Get better flexibility", "5x3 ring muscle ups & handstand walks"));
+        workoutList.add(new Workout("Weightlifting", "No Name", "Get Strong", "Bench, deadlift, squat"));
+
+        RecAdapter adapter = new RecAdapter(workoutList);
+
+        RecyclerView recyclerView = findViewById(R.id.recview);
+
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+
     }
 
     public String getDateString (Calendar date){

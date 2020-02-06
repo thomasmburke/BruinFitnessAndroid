@@ -20,6 +20,9 @@ public class Workout {
     /** Workout contents */
     private String mDescription;
 
+    /** State of the item */
+    private boolean mExpanded;
+
     /**
      * Create a new Word object.
      *
@@ -61,5 +64,13 @@ public class Workout {
      */
     public String getDescription() {
         return mDescription;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.mExpanded = expanded;
+    }
+
+    public boolean isExpanded() {
+        return mExpanded;
     }
 }
