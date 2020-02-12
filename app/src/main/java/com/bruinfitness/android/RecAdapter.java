@@ -68,7 +68,7 @@ public class RecAdapter extends RecyclerView.Adapter<RecAdapter.RecViewHolder> {
 
             workout_type.setText(workout.getWorkoutType());
             name.setText("Workout Name: " + workout.getName());
-            goal.setText("Goal: " + workout.getGoal());
+            goal.setText(workout.getGoal());
             description.setText("Description: " + workout.getDescription());
         }
     }

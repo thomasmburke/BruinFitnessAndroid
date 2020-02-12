@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Set up sample workout list
         List<Workout> workoutList = new ArrayList<>();
-        workoutList.add(new Workout("CrossFit", "Diane", "Work Hard", "21-15-9 reps of: 225-pound Deadlifts"));
-        workoutList.add(new Workout("Gymnastics", "No Name", "Get better flexibility", "5x3 ring muscle ups & handstand walks"));
-        workoutList.add(new Workout("Weightlifting", "No Name", "Get Strong", "Bench, deadlift, squat"));
+        workoutList.add(new Workout("CrossFit", "Diane", "High-Intensity Training", "21-15-9 reps of: 225-pound Deadlifts"));
+        workoutList.add(new Workout("Gymnastics", "No Name", "Technique Building & Flexibility", "5x3 ring muscle ups & handstand walks"));
+        workoutList.add(new Workout("Weightlifting", "No Name", "Baseline Strength & Metcon", "Bench, deadlift, squat"));
 
         RecAdapter adapter = new RecAdapter(workoutList);
 

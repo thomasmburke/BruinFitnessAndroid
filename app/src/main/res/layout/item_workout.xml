@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#fafafa"
     android:orientation="vertical"
     android:paddingBottom="16dp"
     android:paddingEnd="16dp"
     android:paddingLeft="16dp"
     android:paddingStart="16dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/colorPrimaryDark"
@@ -19,10 +18,15 @@
         app:cardMaxElevation="1dp"
         app:cardElevation="0.7dp"
         app:contentPadding="5dp"
-        app:contentPaddingBottom="5dp"
+        app:contentPaddingBottom="15dp"
+        app:contentPaddingTop="10dp"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true"
-        android:id="@+id/cardView">
+        app:cardUseCompatPadding="false"
+        app:strokeColor="#000"
+        app:strokeWidth="2dp"
+        android:theme="@style/Theme.MaterialComponents"
+        android:id="@+id/cardView"
+        android:layout_marginBottom="16dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -32,9 +36,23 @@
                 android:id="@+id/item_workout_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000"
+                android:textColor="#000000"
                 android:textSize="22sp"
-                tools:text="Léon: The Professional" />
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                tools:text="Crossfit" />
+
+            <TextView
+                android:id="@+id/sub_item_goal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:textSize="10sp"
+                android:layout_below="@id/item_workout_type"
+                tools:text="High-Intensity Training" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -49,8 +67,9 @@
                 android:id="@+id/sub_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:layout_below="@+id/sub_item_goal">
 
                 <TextView
                     android:id="@+id/sub_item_name"
@@ -60,23 +79,18 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:fontFamily="sans-serif"
-                    tools:text="Genre:  Crime, Drama, Thriller" />
-
-                <TextView
-                    android:id="@+id/sub_item_goal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    tools:text="Year: 1993" />
+                    tools:text="Genre: Crime, Drama, Thriller" />
 
                 <TextView
                     android:id="@+id/sub_item_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:textSize="18sp"
                     tools:text="Here lies the description of the workout" />
 
             </LinearLayout>
         </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

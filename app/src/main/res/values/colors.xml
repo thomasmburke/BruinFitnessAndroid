@@ -12,6 +12,6 @@
     <color name="colorPrimaryDark">#8e9eab</color>
     <color name="colorPrimaryDarker">#36383A</color>
     <color name="colorPrimaryDarkest">#161C30</color>
-    <color name="colorCard">#000</color>
+    <color name="colorCard">#312E2E</color>
     <color name="colorAccent">#D81B60</color>
 </resources>
