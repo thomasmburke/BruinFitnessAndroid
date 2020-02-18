@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_search"
         android:title="Workouts"
-        android:icon="@drawable/baseline_chevron_right_white_18"
+        android:icon="@drawable/baseline_fitness_center_white_24"
         />
     <item android:id="@+id/action_settings"
         android:title="News"
