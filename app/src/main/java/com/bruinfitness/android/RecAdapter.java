@@ -3,6 +3,7 @@ package com.bruinfitness.android;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,12 +50,14 @@ public class RecAdapter extends RecyclerView.Adapter<RecAdapter.RecViewHolder> {
         private TextView name;
         private TextView goal;
         private TextView description;
+        private ImageView chevron;
         private View subItem;
 
         public RecViewHolder(View itemView) {
             super(itemView);
 
             workout_type = itemView.findViewById(R.id.item_workout_type);
+            chevron = itemView.findViewById(R.id.workout_card_chevron);
             name = itemView.findViewById(R.id.sub_item_name);
             goal = itemView.findViewById(R.id.sub_item_goal);
             description = itemView.findViewById(R.id.sub_item_description);
@@ -65,6 +68,7 @@ public class RecAdapter extends RecyclerView.Adapter<RecAdapter.RecViewHolder> {
             boolean expanded = workout.isExpanded();
 
             subItem.setVisibility(expanded ? View.VISIBLE : View.GONE);
+            //chevron.setVisibility(!expanded ? View.VISIBLE : View.GONE);
 
             workout_type.setText(workout.getWorkoutType());
             name.setText("Workout Name: " + workout.getName());

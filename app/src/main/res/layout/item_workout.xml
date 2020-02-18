@@ -22,7 +22,7 @@
         app:contentPaddingTop="10dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="false"
-        app:strokeColor="#000"
+        app:strokeColor="@color/colorPrimaryDarker"
         app:strokeWidth="2dp"
         android:theme="@style/Theme.MaterialComponents"
         android:id="@+id/cardView"
@@ -55,13 +55,13 @@
                 tools:text="High-Intensity Training" />
 
             <ImageView
+                android:id="@+id/workout_card_chevron"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/baseline_chevron_right_white_36"
-                android:gravity="center_vertical"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:fillColor="@android:color/darker_gray"/>
+                android:layout_alignParentTop="true"
+                android:fillColor="@android:color/white"/>
 
             <LinearLayout
                 android:id="@+id/sub_item"
