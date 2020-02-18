@@ -69,6 +69,7 @@ public class RecAdapter extends RecyclerView.Adapter<RecAdapter.RecViewHolder> {
 
             subItem.setVisibility(expanded ? View.VISIBLE : View.GONE);
             //chevron.setVisibility(!expanded ? View.VISIBLE : View.GONE);
+            chevron.setImageResource(expanded ? R.drawable.baseline_expand_less_white_36: R.drawable.baseline_chevron_down_white_36);
 
             workout_type.setText(workout.getWorkoutType());
             name.setText("Workout Name: " + workout.getName());
