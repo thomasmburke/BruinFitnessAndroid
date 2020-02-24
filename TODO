@@ -1,0 +1,12 @@
+TODOs:
+- only allow one box to be expanded at a time
+- test with white and gray card borders
+- Add tabs for other activities
+- cards expand before cards below move
+- hook up cards to Firestore
+- create gym news section
+- Add Loading screen for when querying Firestore on the main activity
+
+Release Tests:
+- upon release see if Workout class variables need to be public for Firebase toObject
+

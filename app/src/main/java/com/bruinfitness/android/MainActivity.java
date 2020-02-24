@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     public SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy_MM_dd");
     // Access a Cloud Firestore instance from your Activity
     private CollectionReference firestoreDb = FirebaseFirestore.getInstance().collection("workouts");
-    //private CollectionReference firestoreDb = FirebaseFirestore.getInstance().collection("test");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,29 +53,36 @@ public class MainActivity extends AppCompatActivity {
         Calendar tmpDate = Calendar.getInstance();
         tmpDate.add(Calendar.WEEK_OF_MONTH, 1);
 
+        // Iterate through all the dates
         while (!getDateString(tmpDate).equals(getDateString(endDate))){
             Log.i(TAG, getDateString(tmpDate));
 
             tmpDate.add(Calendar.DAY_OF_YEAR, 1);
         }
-        Log.i(TAG, "startDate after loop=" + getDateString(startDate));
+        List<Workout> workoutList = new ArrayList<>();
+        RecAdapter adapter = new RecAdapter(workoutList);
+        RecyclerView recyclerView = findViewById(R.id.recview);
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+
         Task<QuerySnapshot> workoutsfortheday = firestoreDb.document("2020-02-17").collection("types")
-        //Task<QuerySnapshot> workoutsfortheday = firestoreDb
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    //Workout workoutObject= task.getResult().getDocuments().get(0).toObject(Workout.class);
                     Log.d(TAG, "test");
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
-                        //deleteme foo = document.toObject(deleteme.class);
-                        Workout w1 = document.toObject(Workout.class);
-                        //String description = w1.getDescription();
+                        Workout tmpWorkout = document.toObject(Workout.class);
+                        tmpWorkout.setWorkoutType(document.getId());
+                        workoutList.add(tmpWorkout);
                         Log.d(TAG, "test");
                     }
-                    Log.d(TAG, "test");
+                    Log.d(TAG, "Updating Recycler view");
+                    adapter.notifyDataSetChanged();
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -116,20 +122,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Set up sample workout list
-        List<Workout> workoutList = new ArrayList<>();
+        /*List<Workout> workoutList = new ArrayList<>();
         workoutList.add(new Workout("CrossFit", "Diane", "High-Intensity Training", "21-15-9 reps of: 225-pound Deadlifts"));
         workoutList.add(new Workout("Gymnastics", "No Name", "Technique Building & Flexibility", "5x3 ring muscle ups & handstand walks"));
         workoutList.add(new Workout("Weightlifting", "No Name", "Baseline Strength & Metcon", "Bench, deadlift, squat"));
+         */
 
-        RecAdapter adapter = new RecAdapter(workoutList);
 
-        RecyclerView recyclerView = findViewById(R.id.recview);
-
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
 
         //BottomNavigationView
 
