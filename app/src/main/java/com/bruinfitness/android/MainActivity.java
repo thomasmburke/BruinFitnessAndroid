@@ -27,7 +27,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.HorizontalCalendarView;
@@ -45,11 +47,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Calendar endDate = Calendar.getInstance();
-        endDate.add(Calendar.WEEK_OF_MONTH, 1);
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.WEEK_OF_MONTH, -1);
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.WEEK_OF_MONTH, 1);
         Calendar tmpDate = Calendar.getInstance();
         tmpDate.add(Calendar.WEEK_OF_MONTH, 1);
 
@@ -59,8 +60,16 @@ public class MainActivity extends AppCompatActivity {
 
             tmpDate.add(Calendar.DAY_OF_YEAR, 1);
         }
+
+        //Set up sample workout list
+        List<Workout> workoutList2 = new ArrayList<>();
+        workoutList2.add(new Workout("CrossFit", "Diane", "High-Intensity Training", "21-15-9 reps of: 225-pound Deadlifts"));
+        workoutList2.add(new Workout("Gymnastics", "No Name", "Technique Building & Flexibility", "5x3 ring muscle ups & handstand walks"));
+        workoutList2.add(new Workout("Weightlifting", "No Name", "Baseline Strength & Metcon", "Bench, deadlift, squat"));
+        RecAdapter adapter2 = new RecAdapter(workoutList2);
+
         List<Workout> workoutList = new ArrayList<>();
-        RecAdapter adapter = new RecAdapter(workoutList);
+        RecAdapter adapter = new RecAdapter(workoutList2);
         RecyclerView recyclerView = findViewById(R.id.recview);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -81,8 +90,14 @@ public class MainActivity extends AppCompatActivity {
                         workoutList.add(tmpWorkout);
                         Log.d(TAG, "test");
                     }
+                    //HashMap<String, List> dateWorkouts = new HashMap<String, List>();
+                    HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
+                    dateWorkouts.put("2020-02-17", new RecAdapter(workoutList));
+                    dateWorkouts.put("2020-02-18", new RecAdapter(workoutList2));
                     Log.d(TAG, "Updating Recycler view");
-                    adapter.notifyDataSetChanged();
+                    recyclerView.swapAdapter(dateWorkouts.get("2020-02-17"),false);
+
+                    //adapter.notifyDataSetChanged();
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -121,17 +136,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Set up sample workout list
-        /*List<Workout> workoutList = new ArrayList<>();
-        workoutList.add(new Workout("CrossFit", "Diane", "High-Intensity Training", "21-15-9 reps of: 225-pound Deadlifts"));
-        workoutList.add(new Workout("Gymnastics", "No Name", "Technique Building & Flexibility", "5x3 ring muscle ups & handstand walks"));
-        workoutList.add(new Workout("Weightlifting", "No Name", "Baseline Strength & Metcon", "Bench, deadlift, squat"));
-         */
-
-
 
         //BottomNavigationView
-
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

@@ -1,4 +1,5 @@
 TODOs:
+- sort workouts alphabetically by workout type
 - only allow one box to be expanded at a time
 - test with white and gray card borders
 - Add tabs for other activities
@@ -10,3 +11,7 @@ TODOs:
 Release Tests:
 - upon release see if Workout class variables need to be public for Firebase toObject
 
+On Load:
+Query All two weeks of workouts
+write each day workouts to a dictionary
+set recycler view to look at the current days HashMap
