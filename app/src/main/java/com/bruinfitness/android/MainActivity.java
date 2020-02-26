@@ -76,12 +76,16 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
 
-        Task<QuerySnapshot> workoutsfortheday = firestoreDb.document("2020-02-17").collection("types")
+        Task<QuerySnapshot> workoutsfortheday = firestoreDb.document("2020-02-19").collection("types")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
+                if(task.getResult().isEmpty()){
+                    // No documents under this path
+                    Log.d(TAG, "No documents under this path");
+                }
+                else if (task.isSuccessful()) {
                     Log.d(TAG, "test");
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
@@ -95,10 +99,11 @@ public class MainActivity extends AppCompatActivity {
                     dateWorkouts.put("2020-02-17", new RecAdapter(workoutList));
                     dateWorkouts.put("2020-02-18", new RecAdapter(workoutList2));
                     Log.d(TAG, "Updating Recycler view");
-                    recyclerView.swapAdapter(dateWorkouts.get("2020-02-17"),false);
+                    //recyclerView.swapAdapter(dateWorkouts.get("2020-02-17"),false);
 
                     //adapter.notifyDataSetChanged();
                 } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
