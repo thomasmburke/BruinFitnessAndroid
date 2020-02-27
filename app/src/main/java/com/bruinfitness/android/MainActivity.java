@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         startDate.add(Calendar.WEEK_OF_MONTH, -1);
         Calendar endDate = Calendar.getInstance();
         endDate.add(Calendar.WEEK_OF_MONTH, 1);
+        Log.d(TAG, "test");
         Calendar tmpDate = Calendar.getInstance();
         tmpDate.add(Calendar.WEEK_OF_MONTH, 1);
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         List<Workout> workoutList = new ArrayList<>();
         RecAdapter adapter = new RecAdapter(workoutList2);
         RecyclerView recyclerView = findViewById(R.id.recview);
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
