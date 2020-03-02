@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
             tmpDate.add(Calendar.DAY_OF_YEAR, 1);
         }
-        
+
 
         /**
          * Set up Horizontal Calendar view
@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDateSelected(Calendar date, int position) {
                 Toast.makeText(MainActivity.this, getDateString(date), Toast.LENGTH_SHORT).show();
+                recyclerView.swapAdapter(dateWorkouts.get(getDateString(date)),false);
                 Log.i(TAG, getDateString(date));
             }
 
