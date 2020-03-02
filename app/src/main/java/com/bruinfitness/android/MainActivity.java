@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         endDate.add(Calendar.WEEK_OF_MONTH, 1);
         Calendar tmpDate = Calendar.getInstance();
         tmpDate.add(Calendar.WEEK_OF_MONTH, -1);
+        Calendar currDate = Calendar.getInstance();
 
         //Set up sample workout list
         /*List<Workout> workoutList2 = new ArrayList<>();
@@ -99,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
                                 //HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
                                 dateWorkouts.put(tmpDateString, new RecAdapter(workoutList));
                                 Log.d(TAG, "Adding " + tmpDateString + " Recycler View adapter to dateWorkouts Hashmap");
+                                if (tmpDateString.equals(getDateString(currDate))){
+                                    recyclerView.swapAdapter(dateWorkouts.get(getDateString(currDate)),false);
+                                }
                                 //recyclerView.swapAdapter(dateWorkouts.get("2020-02-17"),false);
                                 //adapter.notifyDataSetChanged();
                             } else {
