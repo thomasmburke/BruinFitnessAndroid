@@ -51,66 +51,69 @@ public class MainActivity extends AppCompatActivity {
         startDate.add(Calendar.WEEK_OF_MONTH, -1);
         Calendar endDate = Calendar.getInstance();
         endDate.add(Calendar.WEEK_OF_MONTH, 1);
-        Log.d(TAG, "test");
         Calendar tmpDate = Calendar.getInstance();
-        tmpDate.add(Calendar.WEEK_OF_MONTH, 1);
-
-        // Iterate through all the dates
-        while (!getDateString(tmpDate).equals(getDateString(endDate))){
-            Log.i(TAG, getDateString(tmpDate));
-
-            tmpDate.add(Calendar.DAY_OF_YEAR, 1);
-        }
+        tmpDate.add(Calendar.WEEK_OF_MONTH, -1);
 
         //Set up sample workout list
-        List<Workout> workoutList2 = new ArrayList<>();
+        /*List<Workout> workoutList2 = new ArrayList<>();
         workoutList2.add(new Workout("CrossFit", "Diane", "High-Intensity Training", "21-15-9 reps of: 225-pound Deadlifts"));
         workoutList2.add(new Workout("Gymnastics", "No Name", "Technique Building & Flexibility", "5x3 ring muscle ups & handstand walks"));
         workoutList2.add(new Workout("Weightlifting", "No Name", "Baseline Strength & Metcon", "Bench, deadlift, squat"));
-        RecAdapter adapter2 = new RecAdapter(workoutList2);
+        RecAdapter adapter2 = new RecAdapter(workoutList2);*/
 
-        List<Workout> workoutList = new ArrayList<>();
+        List<Workout> workoutList2 = new ArrayList<>();
         RecAdapter adapter = new RecAdapter(workoutList2);
         RecyclerView recyclerView = findViewById(R.id.recview);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
+        HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
 
-        Task<QuerySnapshot> workoutsfortheday = firestoreDb.document("2020-02-19").collection("types")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.getResult().isEmpty()){
-                    // No documents under this path
-                    Log.d(TAG, "No documents under this path");
-                }
-                else if (task.isSuccessful()) {
-                    Log.d(TAG, "test");
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        Workout tmpWorkout = document.toObject(Workout.class);
-                        tmpWorkout.setWorkoutType(document.getId());
-                        workoutList.add(tmpWorkout);
-                        Log.d(TAG, "test");
-                    }
-                    //HashMap<String, List> dateWorkouts = new HashMap<String, List>();
-                    HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
-                    dateWorkouts.put("2020-02-17", new RecAdapter(workoutList));
-                    dateWorkouts.put("2020-02-18", new RecAdapter(workoutList2));
-                    Log.d(TAG, "Updating Recycler view");
-                    //recyclerView.swapAdapter(dateWorkouts.get("2020-02-17"),false);
+        // Iterate through the two weeks of dates
+        while (!getDateString(tmpDate).equals(getDateString(endDate))){
+            String tmpDateString = getDateString(tmpDate);
+            Log.i(TAG, "querying Firestore for: " + tmpDateString + " workouts");
+            /** Query specific Firestore collection **/
+            firestoreDb.document(tmpDateString).collection("types")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            // initialize a new Workout List
+                            List<Workout> workoutList = new ArrayList<>();
+                            if(task.getResult().isEmpty()){
+                                // No documents under this path
+                                Log.w(TAG, "No documents under" + tmpDateString +" path!");
+                                dateWorkouts.put(tmpDateString, new RecAdapter(workoutList));
+                                Log.d(TAG, "Adding " + tmpDateString + " Recycler View adapter to dateWorkouts Hashmap");
+                            }
+                            else if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    Workout tmpWorkout = document.toObject(Workout.class);
+                                    tmpWorkout.setWorkoutType(document.getId());
+                                    workoutList.add(tmpWorkout);
+                                }
+                                //HashMap<String, List> dateWorkouts = new HashMap<String, List>();
+                                //HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
+                                dateWorkouts.put(tmpDateString, new RecAdapter(workoutList));
+                                Log.d(TAG, "Adding " + tmpDateString + " Recycler View adapter to dateWorkouts Hashmap");
+                                //recyclerView.swapAdapter(dateWorkouts.get("2020-02-17"),false);
+                                //adapter.notifyDataSetChanged();
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
 
-                    //adapter.notifyDataSetChanged();
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
+            tmpDate.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        
 
-
+        /**
+         * Set up Horizontal Calendar view
+         */
         HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(this, R.id.calendarView)
                 .range(startDate, endDate)
                 .datesNumberOnScreen(7)
