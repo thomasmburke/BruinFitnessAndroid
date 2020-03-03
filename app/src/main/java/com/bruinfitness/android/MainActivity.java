@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,10 +27,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
@@ -174,7 +178,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void writeDummyWorkoutsToFirestore(String dateString){
-        firestoreDb.document(dateString).collection("types").set()
+        Map<String, Object> nestedDocFields = new HashMap<>();
+        nestedDocFields.put("description", "Hello world!");
+        nestedDocFields.put("name", "Good Luck");
+        nestedDocFields.put("goal", "win gold medals");
+
+        ArrayList<String> types = new ArrayList<String>();
+        types.add("CrossFit");
+        types.add("Gymnastics");
+        types.add("WeightLifting");
+
+        for (String type : types) {
+
+        firestoreDb.document(dateString).collection("types").document(type)
+                .set(nestedDocFields)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+        }
     }
 
 }
