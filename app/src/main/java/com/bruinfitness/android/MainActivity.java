@@ -55,12 +55,6 @@ public class MainActivity extends AppCompatActivity {
         tmpDate.add(Calendar.WEEK_OF_MONTH, -1);
         Calendar currDate = Calendar.getInstance();
 
-        //Set up sample workout list
-        /*List<Workout> workoutList2 = new ArrayList<>();
-        workoutList2.add(new Workout("CrossFit", "Diane", "High-Intensity Training", "21-15-9 reps of: 225-pound Deadlifts"));
-        workoutList2.add(new Workout("Gymnastics", "No Name", "Technique Building & Flexibility", "5x3 ring muscle ups & handstand walks"));
-        workoutList2.add(new Workout("Weightlifting", "No Name", "Baseline Strength & Metcon", "Bench, deadlift, squat"));
-        RecAdapter adapter2 = new RecAdapter(workoutList2);*/
 
         List<Workout> workoutList2 = new ArrayList<>();
         RecAdapter adapter = new RecAdapter(workoutList2);
@@ -96,14 +90,12 @@ public class MainActivity extends AppCompatActivity {
                                     tmpWorkout.setWorkoutType(document.getId());
                                     workoutList.add(tmpWorkout);
                                 }
-                                //HashMap<String, List> dateWorkouts = new HashMap<String, List>();
-                                //HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
                                 dateWorkouts.put(tmpDateString, new RecAdapter(workoutList));
                                 Log.d(TAG, "Adding " + tmpDateString + " Recycler View adapter to dateWorkouts Hashmap");
+                                // If today's date then set recycler view to display that dates workouts
                                 if (tmpDateString.equals(getDateString(currDate))){
                                     recyclerView.swapAdapter(dateWorkouts.get(getDateString(currDate)),false);
                                 }
-                                //recyclerView.swapAdapter(dateWorkouts.get("2020-02-17"),false);
                                 //adapter.notifyDataSetChanged();
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());
