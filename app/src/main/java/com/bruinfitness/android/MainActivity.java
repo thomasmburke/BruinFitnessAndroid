@@ -40,12 +40,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy_MM_dd");
     // Access a Cloud Firestore instance from your Activity
+    // Enable Firestore logging
     private CollectionReference firestoreDb = FirebaseFirestore.getInstance().collection("workouts");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Enable Firestore logging
+        FirebaseFirestore.setLoggingEnabled(true);
 
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.WEEK_OF_MONTH, -1);
@@ -167,6 +171,10 @@ public class MainActivity extends AppCompatActivity {
 
     public String getDateString (Calendar date){
         return dateFormatter.format(date.getTime());
+    }
+
+    public void writeDummyWorkoutsToFirestore(String dateString){
+        firestoreDb.document(dateString).collection("types").set()
     }
 
 }
