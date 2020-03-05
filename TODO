@@ -1,11 +1,12 @@
 TODOs:
 - sort workouts alphabetically by workout type
 - only allow one box to be expanded at a time
-- test with white and gray card borders
 - Add tabs for other activities
-- hook up cards to Firestore
 - create gym news section
 - Add Loading screen for when querying Firestore on the main activity
+- Create Auth flow
+    - sign in
+    - sign out
 
 Release Tests:
 - upon release see if Workout class variables need to be public for Firebase toObject

@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
         // Enable Firestore logging
         FirebaseFirestore.setLoggingEnabled(true);
 
+        //DELETE ME
+        //writeDummyWorkoutsToFirestore("2020_03_06");
+
+
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.WEEK_OF_MONTH, -1);
         Calendar endDate = Calendar.getInstance();
