@@ -1,13 +1,8 @@
 package com.bruinfitness.android;
 
-import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-
-import com.bruinfitness.android.R;
-import com.bruinfitness.android.WorkoutCalendarActivity;
-import com.bruinfitness.android.WorkoutCalendarFragment;
 
 /**
  * Provides the appropriate {@link Fragment} for a view pager.

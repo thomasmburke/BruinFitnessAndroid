@@ -2,12 +2,16 @@ package com.bruinfitness.android;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Movie;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,112 +51,18 @@ public class MainActivity extends AppCompatActivity {
     // Enable Firestore logging
     private CollectionReference firestoreDb = FirebaseFirestore.getInstance().collection("workouts");
 
+    // DELETE FOR FRAGMENTS
+    private List<Fragment> fragments = new ArrayList<>(3);
+    private static final String TAG_FRAGMENT_CALLS = "tag_frag_calls";
+    private static final String TAG_FRAGMENT_RECENTS = "tag_frag_recents";
+    private static final String TAG_FRAGMENT_TRIPS = "tag_frag_trips";
+    private int currTab = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Enable Firestore logging
-        FirebaseFirestore.setLoggingEnabled(true);
-
-        //DELETE ME
-        //writeDummyWorkoutsToFirestore("2020_03_06");
-
-
-        Calendar startDate = Calendar.getInstance();
-        startDate.add(Calendar.WEEK_OF_MONTH, -1);
-        Calendar endDate = Calendar.getInstance();
-        endDate.add(Calendar.WEEK_OF_MONTH, 1);
-        Calendar tmpDate = Calendar.getInstance();
-        tmpDate.add(Calendar.WEEK_OF_MONTH, -1);
-        Calendar currDate = Calendar.getInstance();
-
-
-        List<Workout> workoutList2 = new ArrayList<>();
-        RecAdapter adapter = new RecAdapter(workoutList2);
-        RecyclerView recyclerView = findViewById(R.id.recview);
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
-
-        // Iterate through the two weeks of dates
-        while (!getDateString(tmpDate).equals(getDateString(endDate))){
-            String tmpDateString = getDateString(tmpDate);
-            Log.i(TAG, "querying Firestore for: " + tmpDateString + " workouts");
-            /** Query specific Firestore collection **/
-            firestoreDb.document(tmpDateString).collection("types")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            // initialize a new Workout List
-                            List<Workout> workoutList = new ArrayList<>();
-                            if(task.getResult().isEmpty()){
-                                // No documents under this path
-                                Log.w(TAG, "No documents under" + tmpDateString +" path!");
-                                dateWorkouts.put(tmpDateString, new RecAdapter(workoutList));
-                                Log.d(TAG, "Adding " + tmpDateString + " Recycler View adapter to dateWorkouts Hashmap");
-                            }
-                            else if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                    Workout tmpWorkout = document.toObject(Workout.class);
-                                    tmpWorkout.setWorkoutType(document.getId());
-                                    workoutList.add(tmpWorkout);
-                                }
-                                dateWorkouts.put(tmpDateString, new RecAdapter(workoutList));
-                                Log.d(TAG, "Adding " + tmpDateString + " Recycler View adapter to dateWorkouts Hashmap");
-                                // If today's date then set recycler view to display that dates workouts
-                                if (tmpDateString.equals(getDateString(currDate))){
-                                    recyclerView.swapAdapter(dateWorkouts.get(getDateString(currDate)),false);
-                                }
-                                //adapter.notifyDataSetChanged();
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
-
-            tmpDate.add(Calendar.DAY_OF_YEAR, 1);
-        }
-
-
-        /**
-         * Set up Horizontal Calendar view
-         */
-        HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(this, R.id.calendarView)
-                .range(startDate, endDate)
-                .datesNumberOnScreen(7)
-                .configure()
-                .showTopText(false)
-                .textSize(12, 12, 12)
-                .end()
-                .build();
-
-
-        horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
-            @Override
-            public void onDateSelected(Calendar date, int position) {
-                Toast.makeText(MainActivity.this, getDateString(date), Toast.LENGTH_SHORT).show();
-                recyclerView.swapAdapter(dateWorkouts.get(getDateString(date)),false);
-                Log.i(TAG, getDateString(date));
-            }
-
-            @Override
-            public void onCalendarScroll(HorizontalCalendarView calendarView,
-                                         int dx, int dy) {
-                //Toast.makeText(MainActivity.this, "calendar scroll", Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public boolean onDateLongClicked(Calendar date, int position) {
-                //Toast.makeText(MainActivity.this, "calendar long click!", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
 
 
         //BottomNavigationView
@@ -162,20 +72,54 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_search:
-                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_SHORT).show();
+                        switchFragment(0, TAG_FRAGMENT_CALLS);
                         break;
                     case R.id.action_settings:
-                        Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                        /*Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        startActivity(intent);
+                         */
+                        switchFragment(1, TAG_FRAGMENT_RECENTS);
                         break;
                     case R.id.action_navigation:
-                        Toast.makeText(MainActivity.this, "Navigation", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "Navigation", Toast.LENGTH_SHORT).show();
+                        switchFragment(2, TAG_FRAGMENT_TRIPS);
                         break;
                 }
                 return true;
             }
         });
 
+        buildFragmentsList();
+
+        // Set the 0th Fragment to be displayed by default.
+        switchFragment(0, TAG_FRAGMENT_CALLS);
+
     }
+
+    private void switchFragment(int pos, String tag) {
+
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .replace(R.id.frame_fragmentholder, fragments.get(pos), tag)
+                .commit();
+    }
+
+
+    private void buildFragmentsList() {
+        WorkoutCalendarFragment callsFragment = new WorkoutCalendarFragment();
+        test recentsFragment = new test();
+        WorkoutCalendarFragment tripsFragment = new WorkoutCalendarFragment();
+
+        fragments.add(callsFragment);
+        fragments.add(recentsFragment);
+        fragments.add(tripsFragment);
+    }
+
 
     public String getDateString (Calendar date){
         return dateFormatter.format(date.getTime());

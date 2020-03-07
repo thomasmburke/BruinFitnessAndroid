@@ -40,9 +40,9 @@ dependencies {
     // recycler view
     //implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    // design library
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
+    // design library (Not needed)
+    //implementation 'com.android.support:design:28.0.0'
+    //implementation 'com.android.support:support-v4:28.0.0'
     // calendar library
     implementation 'devs.mulham.horizontalcalendar:horizontalcalendar:1.3.4'
 
