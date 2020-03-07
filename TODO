@@ -1,9 +1,9 @@
 TODOs:
 - cache firestore queries so that fragment ui loads immediately / reload fragment with previous state?
 - sort workouts alphabetically by workout type
-- only allow one box to be expanded at a time
 - Add tabs for other activities
 - create gym news section
+- create schedule section
 - Add Loading screen for when querying Firestore on the main activity
 - Create Auth flow
     - sign in
@@ -11,6 +11,7 @@ TODOs:
 
 Nice to haves:
 - sliding motion between fragments instead of fading
+- only allow one box to be expanded at a time
 
 Release Tests:
 - upon release see if Workout class variables need to be public for Firebase toObject
