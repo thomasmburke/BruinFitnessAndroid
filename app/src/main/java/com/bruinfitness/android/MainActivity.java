@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                 .replace(R.id.frame_fragmentholder, fragments.get(pos), tag)
+                // Ensure that onDestroyView is the last lifecycle method called not onDestroy, this ensures onCreate is only called once
+                .addToBackStack(TAG)
                 .commit();
     }
 

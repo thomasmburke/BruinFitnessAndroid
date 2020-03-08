@@ -1,6 +1,7 @@
 package com.bruinfitness.android;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -43,7 +44,7 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
  */
 public class WorkoutCalendarFragment extends Fragment {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "WorkoutCalendarFragment";
     public SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy_MM_dd");
     // Access a Cloud Firestore instance from your Activity
     // Enable Firestore logging
@@ -61,6 +62,17 @@ public class WorkoutCalendarFragment extends Fragment {
 
      */
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.i(TAG,"in onAttach");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i(TAG,"in onCreate");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +84,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        //writeDummyWorkoutsToFirestore("2020_03_06");
+        //writeDummyWorkoutsToFirestore("2020_03_07");
 
 
         Calendar startDate = Calendar.getInstance();
@@ -90,7 +102,7 @@ public class WorkoutCalendarFragment extends Fragment {
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
         HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
 
         // Iterate through the two weeks of dates
@@ -107,7 +119,7 @@ public class WorkoutCalendarFragment extends Fragment {
                             List<Workout> workoutList = new ArrayList<>();
                             if(task.getResult().isEmpty()){
                                 // No documents under this path
-                                Log.w(TAG, "No documents under" + tmpDateString +" path!");
+                                Log.w(TAG, "No documents under " + tmpDateString +" path!");
                                 dateWorkouts.put(tmpDateString, new RecAdapter(workoutList));
                                 Log.d(TAG, "Adding " + tmpDateString + " Recycler View adapter to dateWorkouts Hashmap");
                             }
@@ -171,6 +183,54 @@ public class WorkoutCalendarFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.i(TAG,"in onViewCreated");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG,"in onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG,"in onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG,"in onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG,"in onStop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG,"in onDestroyView");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG,"in onDestroy");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.i(TAG,"in onDetach");
     }
 
     public String getDateString (Calendar date){

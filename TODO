@@ -1,4 +1,5 @@
 TODOs:
+- maybe add progress bar on loading screen if possiblen
 - cache firestore queries so that fragment ui loads immediately / reload fragment with previous state?
 - sort workouts alphabetically by workout type
 - Add tabs for other activities
