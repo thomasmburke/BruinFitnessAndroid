@@ -115,6 +115,7 @@ public class WorkoutCalendarFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                         // initialize a new Workout List
                         List<Workout> workoutList = new ArrayList<>();
                         if(task.getResult().isEmpty()){
@@ -144,20 +145,25 @@ public class WorkoutCalendarFragment extends Fragment {
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-
-                        //***************TESTING*******************
-                        // Iterate through the two weeks of dates
-                        while (!getDateString(tmpDate).equals(getDateString(endDate))){
-                            String tmpDateString = getDateString(tmpDate);
-                            Log.i(TAG, "querying Firestore for: " + tmpDateString + " workouts");
-                            if (getDateString(tmpDate).equals(getDateString(currDate))){
+                        if (dateWorkouts.size() < 14){
+                            Log.i(TAG,"Having to fetch the other docs: "+ dateWorkouts.size());
+                            //***************TESTING*******************
+                            // Iterate through the two weeks of dates
+                            while (!getDateString(tmpDate).equals(getDateString(endDate))){
+                                String tmpDateString = getDateString(tmpDate);
+                                Log.i(TAG, "querying Firestore for: " + tmpDateString + " workouts");
+                                if (getDateString(tmpDate).equals(getDateString(currDate))){
+                                    tmpDate.add(Calendar.DAY_OF_YEAR, 1);
+                                    continue;
+                                }
+                                getFirestoreWorkouts(tmpDateString);
                                 tmpDate.add(Calendar.DAY_OF_YEAR, 1);
-                                continue;
                             }
-                            getFirestoreWorkouts(tmpDateString);
-                            tmpDate.add(Calendar.DAY_OF_YEAR, 1);
+                            //***************TESTING*******************
+                        }else{
+                            Log.i(TAG,"didnt have to get other docs: "+ dateWorkouts.size());
                         }
-                        //***************TESTING*******************
+
 
                     }
                 });
