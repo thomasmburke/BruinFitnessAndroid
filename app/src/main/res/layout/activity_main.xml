@@ -7,11 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/frame_fragmentholder"
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"/>
+        android:layout_above="@id/bottom_navigation"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/mobile_navigation" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -21,6 +24,7 @@
         android:theme="@style/Widget.BottomNavigationView"
         app:itemIconTint="@drawable/tab_selector"
         app:itemTextColor="@drawable/tab_selector"
+        android:background="@color/colorPrimaryDarker"
         app:itemBackground="@color/colorPrimaryDarker"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/navigation_items" />

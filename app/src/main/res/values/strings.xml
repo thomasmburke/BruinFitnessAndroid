@@ -4,4 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Search">Search</string>
+    <string name="title_workoutcalendar">Workouts</string>
+    <string name="title_schedule">schedule</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

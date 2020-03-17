@@ -1,4 +1,4 @@
-package com.bruinfitness.android;
+package com.bruinfitness.android.ui.schedule;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bruinfitness.android.R;
 
 
 public class test extends Fragment {

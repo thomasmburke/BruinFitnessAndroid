@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_workoutcalendar">
+
+    <fragment
+        android:id="@+id/navigation_workoutcalendar"
+        android:name="com.bruinfitness.android.ui.workoutcalendar.WorkoutCalendarFragment"
+        android:label="@string/title_workoutcalendar"
+        tools:layout="@layout/workout_calendar_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_schedule"
+        android:name="com.bruinfitness.android.ui.schedule.test"
+        android:label="@string/title_schedule"
+        tools:layout="@layout/fragment_test" />
+
+    <fragment
+        android:id="@+id/navigation_workoutcalendar2"
+        android:name="com.bruinfitness.android.ui.workoutcalendar.WorkoutCalendarFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/workout_calendar_fragment" />
+</navigation>
