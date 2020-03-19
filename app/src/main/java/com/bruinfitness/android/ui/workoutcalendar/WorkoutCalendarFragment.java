@@ -255,22 +255,29 @@ public class WorkoutCalendarFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         // initialize a new Workout List
                         List<Workout> workoutList = new ArrayList<>();
-                        // Check if the query executed sucessfully
+                        // Check if the query executed successfully
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
+                            // If the document is not empty
                             if (document.exists()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
+                                // temporarily store document data
                                 Map<String, Object> tmpDoc = document.getData();
+                                // iterate through each map (WorkoutType) in the document
                                 for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
+                                    // Convert each map in the document to a POJO object
                                     Gson gson = new Gson();
                                     JsonElement jsonElement = gson.toJsonTree(entry.getValue());
                                     Workout workout = gson.fromJson(jsonElement, Workout.class);
                                     workout.setWorkoutType(entry.getKey());
+                                    // Add each workout type to the workout list
                                     workoutList.add(workout);
                                 }
+                                // Note HashMap put acts as both add and overwrite
                                 dateWorkouts.put(date, new RecAdapter(workoutList));
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                             } else {
+                                // TODO: add an offline message to the user and check if a document already exists?
                                 Log.d(TAG, "No such document: " + date);
                                 dateWorkouts.put(date, new RecAdapter(workoutList));
                                 Log.d(TAG, "Adding " + date + " Recycler View adapter to dateWorkouts Hashmap");
