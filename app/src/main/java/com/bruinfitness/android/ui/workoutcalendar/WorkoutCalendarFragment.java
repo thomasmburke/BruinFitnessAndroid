@@ -27,9 +27,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.michalsvec.singlerowcalendar.calendar.CalendarChangesObserver;
 import com.michalsvec.singlerowcalendar.calendar.CalendarViewManager;
 import com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar;
@@ -109,64 +112,8 @@ public class WorkoutCalendarFragment extends Fragment {
         recyclerView.setAdapter(adapter);
          */
 
+        getFirestoreWorkouts("2020_03_18");
 
-        firestoreDb.document(currDateString).collection("types")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                        // initialize a new Workout List
-                        List<Workout> workoutList = new ArrayList<>();
-                        if(task.getResult().isEmpty()){
-                            // No documents under this path
-                            Log.w(TAG, "No documents under " + currDateString +" path!");
-                            dateWorkouts.put(currDateString, new RecAdapter(workoutList));
-                            Log.d(TAG, "Adding " + currDateString + " Recycler View adapter to dateWorkouts Hashmap");
-                        }
-                        else if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                Workout tmpWorkout = document.toObject(Workout.class);
-                                tmpWorkout.setWorkoutType(document.getId());
-                                workoutList.add(tmpWorkout);
-                            }
-                            dateWorkouts.put(currDateString, new RecAdapter(workoutList));
-                            Log.d(TAG, "Adding " + currDateString + " Recycler View adapter to dateWorkouts Hashmap");
-
-                            RecyclerView recyclerView = rootView.findViewById(R.id.recview);
-                            ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                            recyclerView.setAdapter(dateWorkouts.get(currDateString));
-
-                            //recyclerView.swapAdapter(dateWorkouts.get(currDateString),false);
-
-                            //adapter.notifyDataSetChanged();
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                        if (dateWorkouts.size() < 14){
-                            Log.i(TAG,"Having to fetch the other docs: "+ dateWorkouts.size());
-                            //***************TESTING*******************
-                            // Iterate through the two weeks of dates
-                            while (!getDateString(tmpDate).equals(getDateString(endDate))){
-                                String tmpDateString = getDateString(tmpDate);
-                                Log.i(TAG, "querying Firestore for: " + tmpDateString + " workouts");
-                                if (getDateString(tmpDate).equals(getDateString(currDate))){
-                                    tmpDate.add(Calendar.DAY_OF_YEAR, 1);
-                                    continue;
-                                }
-                                getFirestoreWorkouts(tmpDateString);
-                                tmpDate.add(Calendar.DAY_OF_YEAR, 1);
-                            }
-                            //***************TESTING*******************
-                        }else{
-                            Log.i(TAG,"didnt have to get other docs: "+ dateWorkouts.size());
-                        }
-
-
-                    }
-                });
 
 
         return rootView;
@@ -301,30 +248,35 @@ public class WorkoutCalendarFragment extends Fragment {
 
     public void getFirestoreWorkouts(String date){
         /** Query specific Firestore collection **/
-        firestoreDb.document(date).collection("types")
+        firestoreDb.document(date)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         // initialize a new Workout List
                         List<Workout> workoutList = new ArrayList<>();
-                        if(task.getResult().isEmpty()){
-                            // No documents under this path
-                            Log.w(TAG, "No documents under " + date +" path!");
-                            dateWorkouts.put(date, new RecAdapter(workoutList));
-                            Log.d(TAG, "Adding " + date + " Recycler View adapter to dateWorkouts Hashmap");
-                        }
-                        else if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                Workout tmpWorkout = document.toObject(Workout.class);
-                                tmpWorkout.setWorkoutType(document.getId());
-                                workoutList.add(tmpWorkout);
+                        // Check if the query executed sucessfully
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
+                                Map<String, Object> tmpDoc = document.getData();
+                                for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
+                                    Gson gson = new Gson();
+                                    JsonElement jsonElement = gson.toJsonTree(entry.getValue());
+                                    Workout workout = gson.fromJson(jsonElement, Workout.class);
+                                    workout.setWorkoutType(entry.getKey());
+                                    workoutList.add(workout);
+                                }
+                                dateWorkouts.put(date, new RecAdapter(workoutList));
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                            } else {
+                                Log.d(TAG, "No such document: " + date);
+                                dateWorkouts.put(date, new RecAdapter(workoutList));
+                                Log.d(TAG, "Adding " + date + " Recycler View adapter to dateWorkouts Hashmap");
                             }
-                            dateWorkouts.put(date, new RecAdapter(workoutList));
-                            Log.d(TAG, "Adding " + date + " Recycler View adapter to dateWorkouts Hashmap");
                         } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            Log.d(TAG, "get document failed with ", task.getException());
                         }
                     }
                 });
