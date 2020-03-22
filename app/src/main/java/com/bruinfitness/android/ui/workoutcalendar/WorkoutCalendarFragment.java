@@ -28,7 +28,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
@@ -40,6 +42,7 @@ import com.michalsvec.singlerowcalendar.calendar.SingleRowCalendarAdapter;
 import com.michalsvec.singlerowcalendar.selection.CalendarSelectionManager;
 import com.michalsvec.singlerowcalendar.utils.DateUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,6 +82,8 @@ public class WorkoutCalendarFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG,"in onCreate");
+
+
     }
 
     @Override
@@ -91,7 +96,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        //writeDummyWorkoutsToFirestore("2020_03_16");
+        writeDummyWorkoutsToFirestore("2020_03_14");
 
 
         Calendar startDate = Calendar.getInstance();
@@ -103,17 +108,13 @@ public class WorkoutCalendarFragment extends Fragment {
         Calendar currDate = Calendar.getInstance();
         String currDateString = getDateString(currDate);
 
-        /*
-        List<Workout> workoutList2 = new ArrayList<>();
-        RecAdapter adapter = new RecAdapter(workoutList2);
+
         RecyclerView recyclerView = rootView.findViewById(R.id.recview);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-         */
 
-        getFirestoreWorkouts("2020_03_18");
 
+        getFirestoreWorkouts(currDateString, recyclerView);
 
 
         return rootView;
@@ -246,6 +247,52 @@ public class WorkoutCalendarFragment extends Fragment {
         return dateFormatter.format(date.getTime());
     }
 
+    public void getFirestoreWorkouts(String date, RecyclerView recyclerView){
+
+        /** Query specific Firestore collection **/
+        firestoreDb.document(date)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        // initialize a new Workout List
+                        List<Workout> workoutList = new ArrayList<>();
+                        // Check if the query executed successfully
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            // If the document is not empty
+                            if (document.exists()) {
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
+                                // temporarily store document data
+                                Map<String, Object> tmpDoc = document.getData();
+                                // iterate through each map (WorkoutType) in the document
+                                for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
+                                    // Convert each map in the document to a POJO object
+                                    if (entry.getKey().equals("date")){continue;}
+                                    Gson gson = new Gson();
+                                    JsonElement jsonElement = gson.toJsonTree(entry.getValue());
+                                    Workout workout = gson.fromJson(jsonElement, Workout.class);
+                                    workout.setWorkoutType(entry.getKey());
+                                    // Add each workout type to the workout list
+                                    workoutList.add(workout);
+                                }
+                                // Note HashMap put acts as both add and overwrite
+                                dateWorkouts.put(date, new RecAdapter(workoutList));
+                                recyclerView.setAdapter(dateWorkouts.get(date));
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                            } else {
+                                // TODO: add an offline message to the user and check if a document already exists?
+                                Log.d(TAG, "No such document: " + date);
+                                dateWorkouts.put(date, new RecAdapter(workoutList));
+                                Log.d(TAG, "Adding " + date + " Recycler View adapter to dateWorkouts Hashmap");
+                            }
+                        } else {
+                            Log.d(TAG, "get document failed with ", task.getException());
+                        }
+                    }
+                });
+    }
+
     public void getFirestoreWorkouts(String date){
         /** Query specific Firestore collection **/
         firestoreDb.document(date)
@@ -291,33 +338,40 @@ public class WorkoutCalendarFragment extends Fragment {
 
 
     public void writeDummyWorkoutsToFirestore(String dateString){
+        Map<String, Object> docData = new HashMap<>();
+
         Map<String, Object> nestedDocFields = new HashMap<>();
         nestedDocFields.put("description", "Hello world!");
         nestedDocFields.put("name", "Good Luck");
         nestedDocFields.put("goal", "win gold medals");
 
-        ArrayList<String> types = new ArrayList<String>();
-        types.add("CrossFit");
-        types.add("Gymnastics");
-        types.add("WeightLifting");
-
-        for (String type : types) {
-
-            firestoreDb.document(dateString).collection("types").document(type)
-                    .set(nestedDocFields)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully written!");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error writing document", e);
-                        }
-                    });
+        docData.put("CrossFit", nestedDocFields);
+        docData.put("Gymnastics", nestedDocFields);
+        docData.put("Weightlifting", nestedDocFields);
+        Date firestoreDate = null;
+        try {
+            SimpleDateFormat testFormat = new SimpleDateFormat("yyyy_MM_dd");
+            firestoreDate = testFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        //Date test = new Date();
+        docData.put("date", firestoreDate);
+
+        firestoreDb.document(dateString)
+                .set(docData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
     }
 
 }
