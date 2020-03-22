@@ -1,5 +1,4 @@
 TODOs:
-- update calendar view to sunday to sunday
 - perform tests to see exactly how often the app is reading from the database
 - cache firestore queries so that fragment ui loads immediately / reload fragment with previous state?
 - sort workouts alphabetically by workout type

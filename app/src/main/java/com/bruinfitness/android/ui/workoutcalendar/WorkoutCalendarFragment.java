@@ -257,13 +257,69 @@ public class WorkoutCalendarFragment extends Fragment {
                 return true;
             }
         });
-        mv_calendar.setFutureDaysCount(7);
-        mv_calendar.setPastDaysCount(7);
-        mv_calendar.setIncludeCurrentDate(true);
-        mv_calendar.setInitialPositionIndex(5);
-        mv_calendar.init();
-        mv_calendar.select(7);
+        HashMap<String, Integer> calendarConfig = gatherCalendarConfigurations();
 
+        mv_calendar.setFutureDaysCount(calendarConfig.get("futureDaysCount"));
+        mv_calendar.setPastDaysCount(calendarConfig.get("pastDaysCount"));
+        mv_calendar.setIncludeCurrentDate(true);
+        mv_calendar.setInitialPositionIndex(calendarConfig.get("initialIndexPosition"));
+        mv_calendar.init();
+        mv_calendar.select(calendarConfig.get("select"));
+
+    }
+
+    public HashMap<String, Integer> gatherCalendarConfigurations(){
+        HashMap<String, Integer> calendarConfig = new HashMap<String, Integer>();
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.SUNDAY:
+                calendarConfig.put("futureDaysCount", 7);
+                calendarConfig.put("pastDaysCount", 7);
+                calendarConfig.put("initialIndexPosition", 5);
+                calendarConfig.put("select", 7);
+                break;
+            case Calendar.MONDAY:
+                calendarConfig.put("futureDaysCount",6);
+                calendarConfig.put("pastDaysCount", 8);
+                calendarConfig.put("initialIndexPosition", 6);
+                calendarConfig.put("select", 8);
+                break;
+            case Calendar.TUESDAY:
+                calendarConfig.put("futureDaysCount",5);
+                calendarConfig.put("pastDaysCount", 9);
+                calendarConfig.put("initialIndexPosition", 7);
+                calendarConfig.put("select", 9);
+                break;
+            case Calendar.WEDNESDAY:
+                calendarConfig.put("futureDaysCount", 4);
+                calendarConfig.put("pastDaysCount", 10);
+                calendarConfig.put("initialIndexPosition", 8);
+                calendarConfig.put("select", 10);
+                break;
+            case Calendar.THURSDAY:
+                calendarConfig.put("futureDaysCount", 3);
+                calendarConfig.put("pastDaysCount", 11);
+                calendarConfig.put("initialIndexPosition", 9);
+                calendarConfig.put("select", 11);
+                break;
+            case Calendar.FRIDAY:
+                calendarConfig.put("futureDaysCount", 2);
+                calendarConfig.put("pastDaysCount", 12);
+                calendarConfig.put("initialIndexPosition", 10);
+                calendarConfig.put("select", 12);
+                break;
+            case Calendar.SATURDAY:
+                calendarConfig.put("futureDaysCount", 1);
+                calendarConfig.put("pastDaysCount", 13);
+                calendarConfig.put("initialIndexPosition", 11);
+                calendarConfig.put("select", 13);
+                break;
+            default :
+                Log.e(TAG, "invalid day of the week");
+        }
+        return calendarConfig;
     }
 
 
