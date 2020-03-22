@@ -83,7 +83,9 @@ public class WorkoutCalendarFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.i(TAG,"in onCreate");
         Date date = new Date();
-        Date fifteenDaysBack = new Date(date.getTime() - (7 * DAY_IN_MS));
+        // Giving an extra day due to daylight savings time issues that could ensue
+        Date fifteenDaysBack = new Date(date.getTime() - (15 * DAY_IN_MS));
+        // NOTE: would a limit for the query potentially make sense here?
         firestoreDb
             .whereGreaterThanOrEqualTo("date", fifteenDaysBack)
             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -94,7 +96,7 @@ public class WorkoutCalendarFragment extends Fragment {
                         Log.w(TAG, "Listen failed.", e);
                         return;
                     }
-                    
+
                     for (QueryDocumentSnapshot document : value) {
                         List<Workout> workoutList = new ArrayList<>();
                         Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
@@ -131,7 +133,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        writeDummyWorkoutsToFirestore("2020_02_14");
+        //writeDummyWorkoutsToFirestore("2020_02_14");
 
 
         Calendar startDate = Calendar.getInstance();

@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     private void buildFragmentsList() {
         WorkoutCalendarFragment callsFragment = new WorkoutCalendarFragment();
         test recentsFragment = new test();
-        WorkoutCalendarFragment tripsFragment = new WorkoutCalendarFragment();
+        test tripsFragment = new test();
 
         fragments.add(callsFragment);
         fragments.add(recentsFragment);

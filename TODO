@@ -1,11 +1,11 @@
 TODOs:
-- maybe add progress bar on loading screen if possiblen
+- update calendar view to sunday to sunday
+- perform tests to see exactly how often the app is reading from the database
 - cache firestore queries so that fragment ui loads immediately / reload fragment with previous state?
 - sort workouts alphabetically by workout type
 - Add tabs for other activities
 - create gym news section
 - create schedule section
-- Add Loading screen for when querying Firestore on the main activity
 - Create Auth flow
     - sign in
     - sign out
@@ -17,7 +17,3 @@ Nice to haves:
 Release Tests:
 - upon release see if Workout class variables need to be public for Firebase toObject
 
-On Load:
-Query All two weeks of workouts
-write each day workouts to a dictionary
-set recycler view to look at the current days HashMap
