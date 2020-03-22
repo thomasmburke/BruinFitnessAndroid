@@ -66,7 +66,7 @@ public class WorkoutCalendarFragment extends Fragment {
     private HashMap<String, RecAdapter> dateWorkouts = new HashMap<String, RecAdapter>();
     // Access a Cloud Firestore instance from your Activity
     private CollectionReference firestoreDb = FirebaseFirestore.getInstance().collection("workouts");
-
+    private long DAY_IN_MS = 1000 * 60 * 60 * 24;
 
     public WorkoutCalendarFragment() {
         // Required empty public constructor
@@ -82,7 +82,42 @@ public class WorkoutCalendarFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG,"in onCreate");
-
+        Date date = new Date();
+        Date fifteenDaysBack = new Date(date.getTime() - (7 * DAY_IN_MS));
+        firestoreDb
+            .whereGreaterThanOrEqualTo("date", fifteenDaysBack)
+            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+                    
+                    for (QueryDocumentSnapshot document : value) {
+                        List<Workout> workoutList = new ArrayList<>();
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
+                        // temporarily store document data
+                        Map<String, Object> tmpDoc = document.getData();
+                        // iterate through each map (WorkoutType) in the document
+                        for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
+                            // Convert each map in the document to a POJO object
+                            if (entry.getKey().equals("date")){continue;}
+                            Gson gson = new Gson();
+                            JsonElement jsonElement = gson.toJsonTree(entry.getValue());
+                            Workout workout = gson.fromJson(jsonElement, Workout.class);
+                            workout.setWorkoutType(entry.getKey());
+                            // Add each workout type to the workout list
+                            workoutList.add(workout);
+                        }
+                        // Note HashMap put acts as both add and overwrite
+                        dateWorkouts.put(document.getId(), new RecAdapter(workoutList));
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    }
+                    Log.d(TAG, "Workouts read by snapshot Listener: ");
+                }
+            });
 
     }
 
@@ -96,7 +131,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        writeDummyWorkoutsToFirestore("2020_03_14");
+        writeDummyWorkoutsToFirestore("2020_02_14");
 
 
         Calendar startDate = Calendar.getInstance();
@@ -115,6 +150,17 @@ public class WorkoutCalendarFragment extends Fragment {
 
 
         getFirestoreWorkouts(currDateString, recyclerView);
+
+        /*
+        Date firestoreDate2 = null;
+        try {
+            SimpleDateFormat testFormat = new SimpleDateFormat("yyyy_MM_dd");
+            firestoreDate2 = testFormat.parse(currDateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        queryWithDateFilter(firestoreDate2);
+         */
 
 
         return rootView;
@@ -245,6 +291,25 @@ public class WorkoutCalendarFragment extends Fragment {
 
     public String getDateString (Calendar date){
         return dateFormatter.format(date.getTime());
+    }
+
+    public void queryWithDateFilter(Date date2){
+        firestoreDb
+                .whereGreaterThanOrEqualTo("date", date2)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        // initialize a new Workout List
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     public void getFirestoreWorkouts(String date, RecyclerView recyclerView){
