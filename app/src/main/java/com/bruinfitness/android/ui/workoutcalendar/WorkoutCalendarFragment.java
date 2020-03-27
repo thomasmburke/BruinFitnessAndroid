@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
@@ -67,6 +68,7 @@ public class WorkoutCalendarFragment extends Fragment {
     // Access a Cloud Firestore instance from your Activity
     private CollectionReference firestoreDb = FirebaseFirestore.getInstance().collection("workouts");
     private long DAY_IN_MS = 1000 * 60 * 60 * 24;
+    private ListenerRegistration registration;
 
     public WorkoutCalendarFragment() {
         // Required empty public constructor
@@ -86,7 +88,8 @@ public class WorkoutCalendarFragment extends Fragment {
         // Giving an extra day due to daylight savings time issues that could ensue
         Date fifteenDaysBack = new Date(date.getTime() - (15 * DAY_IN_MS));
         // NOTE: would a limit for the query potentially make sense here?
-        firestoreDb
+        Log.i(TAG,"Attaching Firestore snapshot listener");
+        registration = firestoreDb
             .whereGreaterThanOrEqualTo("date", fifteenDaysBack)
             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
@@ -212,6 +215,11 @@ public class WorkoutCalendarFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG,"in onDestroy");
+        // Stop listening to changes
+        if (registration != null) {
+            registration.remove();
+        }
+        Log.i(TAG,"Detaching Firestore snapshot listener");
     }
 
     @Override
