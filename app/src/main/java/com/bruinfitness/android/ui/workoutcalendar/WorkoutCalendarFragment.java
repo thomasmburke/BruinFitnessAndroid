@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bruinfitness.android.MainActivity;
 import com.bruinfitness.android.R;
 import com.bruinfitness.android.RecAdapter;
 import com.bruinfitness.android.Workout;
@@ -69,6 +70,7 @@ public class WorkoutCalendarFragment extends Fragment {
     private CollectionReference firestoreDb = FirebaseFirestore.getInstance().collection("workouts");
     private long DAY_IN_MS = 1000 * 60 * 60 * 24;
     private ListenerRegistration registration;
+    private List<Workout> emptyList = new ArrayList<>();
 
     public WorkoutCalendarFragment() {
         // Required empty public constructor
@@ -89,6 +91,7 @@ public class WorkoutCalendarFragment extends Fragment {
         Date fifteenDaysBack = new Date(date.getTime() - (15 * DAY_IN_MS));
         // NOTE: would a limit for the query potentially make sense here?
         Log.i(TAG,"Attaching Firestore snapshot listener");
+
         registration = firestoreDb
             .whereGreaterThanOrEqualTo("date", fifteenDaysBack)
             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -153,20 +156,7 @@ public class WorkoutCalendarFragment extends Fragment {
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
         getFirestoreWorkouts(currDateString, recyclerView);
-
-        /*
-        Date firestoreDate2 = null;
-        try {
-            SimpleDateFormat testFormat = new SimpleDateFormat("yyyy_MM_dd");
-            firestoreDate2 = testFormat.parse(currDateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        queryWithDateFilter(firestoreDate2);
-         */
-
 
         return rootView;
     }
@@ -240,7 +230,12 @@ public class WorkoutCalendarFragment extends Fragment {
             public void whenSelectionChanged(boolean b, int i, Date date) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
                 RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recview);
-                recyclerView.swapAdapter(dateWorkouts.get(dateFormat.format(date)),false);
+                RecAdapter recAdapter = dateWorkouts.get(dateFormat.format(date));
+                if (recAdapter != null) {
+                    recyclerView.swapAdapter(dateWorkouts.get(dateFormat.format(date)), false);
+                } else {
+                    recyclerView.swapAdapter(new RecAdapter(emptyList), false);
+                }
 
             }
 

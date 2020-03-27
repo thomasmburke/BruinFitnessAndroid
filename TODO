@@ -1,4 +1,6 @@
 TODOs:
+- add tags to workout documents to make them searchable
+- provide view for when workout is not present for a given day
 - perform tests to see exactly how often the app is reading from the database
 - cache firestore queries so that fragment ui loads immediately / reload fragment with previous state?
 - sort workouts alphabetically by workout type
