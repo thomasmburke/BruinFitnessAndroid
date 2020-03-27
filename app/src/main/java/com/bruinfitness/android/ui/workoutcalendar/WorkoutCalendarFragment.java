@@ -231,6 +231,7 @@ public class WorkoutCalendarFragment extends Fragment {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
                 RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recview);
                 RecAdapter recAdapter = dateWorkouts.get(dateFormat.format(date));
+                // check if adapter exists, if not provide an empty recycler view
                 if (recAdapter != null) {
                     recyclerView.swapAdapter(dateWorkouts.get(dateFormat.format(date)), false);
                 } else {

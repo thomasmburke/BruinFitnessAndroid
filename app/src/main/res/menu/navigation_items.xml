@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/navigation_workoutcalendar"
-        android:title="Workouts"
+        android:title="Programming"
         android:icon="@drawable/baseline_fitness_center_white_24"
         />
     <item android:id="@+id/navigation_schedule"

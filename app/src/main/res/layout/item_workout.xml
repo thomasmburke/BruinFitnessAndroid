@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:layout_below="@id/item_workout_type"
                 tools:text="High-Intensity Training" />
 
@@ -78,7 +78,8 @@
                     android:textSize="18sp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
                     tools:text="Genre: Crime, Drama, Thriller" />
 
                 <TextView
@@ -88,6 +89,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
                     tools:text="Here lies the description of the workout" />
 
             </LinearLayout>

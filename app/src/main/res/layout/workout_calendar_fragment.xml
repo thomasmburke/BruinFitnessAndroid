@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
-        android:text="Workouts"
+        android:text="Bruin Programming"
         android:textColor="@color/colorPrimaryDarker"
         android:textSize="30dp"
         android:textStyle="bold"
