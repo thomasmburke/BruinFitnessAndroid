@@ -1,10 +1,11 @@
 TODOs:
-- add tags to workout documents to make them searchable
-- provide view for when workout is not present for a given day
+Enhance workout data:
+    - ability for users to star / heart workouts 
+        - allows for tracking of what workouts users liked
+        - maybe allow users to store favorite workouts
+    - add tags to workout documents to make them searchable
 - perform tests to see exactly how often the app is reading from the database
-- cache firestore queries so that fragment ui loads immediately / reload fragment with previous state?
 - sort workouts alphabetically by workout type
-- Add tabs for other activities
 - create gym news section
 - create schedule section
 - Create Auth flow
@@ -12,6 +13,7 @@ TODOs:
     - sign out
 
 Nice to haves:
+- provide view for when workout is not present for a given day
 - sliding motion between fragments instead of fading
 - only allow one box to be expanded at a time
 

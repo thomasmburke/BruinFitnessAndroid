@@ -17,13 +17,13 @@ public class Schedule {
      * @param day day workout is on
      * @param time time of the workout
      */
-    public Schedule(String cityName, String day, String time) {
+    public Schedule(String cityName, String time, String day) {
         this.cityName = cityName;
         this.day = day;
         this.time = time;
     }
 
-    public Schedule(String day, String time) {
+    public Schedule(String time, String day) {
         this.day = day;
         this.time = time;
     }

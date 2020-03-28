@@ -3,28 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="4dp">
 
     <TextView
-        android:id="@+id/item_time"
+        android:id="@+id/item_workout_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
         android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="10dp"
         tools:text="6:00am - 7:00am" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
     <TextView
-        android:id="@+id/item_day"
+        android:id="@+id/item_workout_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
         android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_gravity="right"
+        android:layout_marginEnd="10dp"
         tools:text="Mon-Fri" />
 
 
