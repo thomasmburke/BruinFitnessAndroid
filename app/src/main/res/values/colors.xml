@@ -14,4 +14,10 @@
     <color name="colorPrimaryDarkest">#161C30</color>
     <color name="colorCard">#312E2E</color>
     <color name="colorAccent">#D81B60</color>
+
+
+    <color name="primaryBackground">#121212</color>
+    <color name="colorCard2">#272727</color>
+    <color name="bruinGreen">#039509</color>
+
 </resources>

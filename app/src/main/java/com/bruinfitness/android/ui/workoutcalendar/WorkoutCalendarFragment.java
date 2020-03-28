@@ -15,14 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bruinfitness.android.MainActivity;
 import com.bruinfitness.android.R;
-import com.bruinfitness.android.RecAdapter;
-import com.bruinfitness.android.Workout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -53,10 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import devs.mulham.horizontalcalendar.HorizontalCalendar;
-import devs.mulham.horizontalcalendar.HorizontalCalendarView;
-import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -71,6 +62,7 @@ public class WorkoutCalendarFragment extends Fragment {
     private long DAY_IN_MS = 1000 * 60 * 60 * 24;
     private ListenerRegistration registration;
     private List<Workout> emptyList = new ArrayList<>();
+    private DateUtils dateUtils = DateUtils.INSTANCE;
 
     public WorkoutCalendarFragment() {
         // Required empty public constructor
@@ -139,15 +131,8 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        //writeDummyWorkoutsToFirestore("2020_02_14");
+        //writeDummyWorkoutsToFirestore("2020_03_27");
 
-
-        Calendar startDate = Calendar.getInstance();
-        startDate.add(Calendar.WEEK_OF_MONTH, -1);
-        Calendar endDate = Calendar.getInstance();
-        endDate.add(Calendar.WEEK_OF_MONTH, 1);
-        Calendar tmpDate = Calendar.getInstance();
-        tmpDate.add(Calendar.WEEK_OF_MONTH, -1);
         Calendar currDate = Calendar.getInstance();
         String currDateString = getDateString(currDate);
 
@@ -156,7 +141,11 @@ public class WorkoutCalendarFragment extends Fragment {
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        getFirestoreWorkouts(currDateString, recyclerView);
+        RecAdapter recAdapter = dateWorkouts.get(currDateString);
+        // Check if we have already retrieved today's workout, if so no need to hit the DB
+        if (recAdapter == null) {
+            getFirestoreWorkouts(currDateString, recyclerView);
+        }
 
         return rootView;
     }
@@ -169,30 +158,6 @@ public class WorkoutCalendarFragment extends Fragment {
         mv_calendar = view.findViewById(R.id.single_row_calendar);
 
         setupCalendar();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(TAG,"in onStart");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(TAG,"in onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(TAG,"in onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i(TAG,"in onStop");
     }
 
     @Override
@@ -212,11 +177,6 @@ public class WorkoutCalendarFragment extends Fragment {
         Log.i(TAG,"Detaching Firestore snapshot listener");
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.i(TAG,"in onDetach");
-    }
 
     private void setupCalendar() {
         mv_calendar.setCalendarViewManager(new MyCalendarViewManager());
@@ -228,15 +188,20 @@ public class WorkoutCalendarFragment extends Fragment {
 
             @Override
             public void whenSelectionChanged(boolean b, int i, Date date) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
                 RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recview);
-                RecAdapter recAdapter = dateWorkouts.get(dateFormat.format(date));
+                RecAdapter recAdapter = dateWorkouts.get(dateFormatter.format(date));
                 // check if adapter exists, if not provide an empty recycler view
                 if (recAdapter != null) {
-                    recyclerView.swapAdapter(dateWorkouts.get(dateFormat.format(date)), false);
+                    recyclerView.swapAdapter(dateWorkouts.get(dateFormatter.format(date)), false);
                 } else {
                     recyclerView.swapAdapter(new RecAdapter(emptyList), false);
                 }
+                // Change date text
+                TextView dateTextView = (TextView) getView().findViewById(R.id.date_text);
+                TextView dayOfWeekTextView = (TextView) getView().findViewById(R.id.day_of_week_text);
+                dateTextView.setText(dateUtils.getMonthName(date) + ", " + dateUtils.getDayNumber(date));
+                dayOfWeekTextView.setText(dateUtils.getDayName(date));
+
 
             }
 
@@ -336,10 +301,8 @@ public class WorkoutCalendarFragment extends Fragment {
             TextView text_date = calendarViewHolder.itemView.findViewById(R.id.text_date);
             TextView text_day = calendarViewHolder.itemView.findViewById(R.id.text_day);
 
-            DateUtils utils = DateUtils.INSTANCE;
-
-            text_date.setText(utils.getDayNumber(date));
-            text_day.setText(utils.getDay3LettersName(date));
+            text_date.setText(dateUtils.getDayNumber(date));
+            text_day.setText(dateUtils.getDay3LettersName(date));
         }
 
         @Override

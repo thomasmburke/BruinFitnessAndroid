@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.bruinfitness.android.ui.schedule.ScheduleFragment;
 import com.bruinfitness.android.ui.schedule.test;
 import com.bruinfitness.android.ui.workoutcalendar.WorkoutCalendarFragment;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -103,11 +104,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void buildFragmentsList() {
         WorkoutCalendarFragment callsFragment = new WorkoutCalendarFragment();
-        test recentsFragment = new test();
+        ScheduleFragment scheduleFragment = new ScheduleFragment();
         test tripsFragment = new test();
 
         fragments.add(callsFragment);
-        fragments.add(recentsFragment);
+        fragments.add(scheduleFragment);
         fragments.add(tripsFragment);
     }
 

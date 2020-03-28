@@ -4,16 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
+    android:background="@color/primaryBackground"
     tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/total_date_text"
+        android:orientation="horizontal"
+        android:paddingTop="6dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:text="December, 25"
+            android:textColor="#FFFFFF"
+            android:textSize="26dp"
+            android:textStyle="bold"
+            android:layout_below="@id/single_row_calendar"/>
+
+        <TextView
+            android:id="@+id/day_of_week_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:text="Wednesday"
+            android:textColor="#99FFFFFF"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:layout_below="@id/single_row_calendar"/>
+
+    </LinearLayout>
+
+
 
     <com.michalsvec.singlerowcalendar.calendar.SingleRowCalendar
         android:id="@+id/single_row_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/total_date_text"
         app:deselection="false"
         app:longPress="false"
         app:multiSelection="false" />
@@ -25,7 +58,7 @@
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:text="Bruin Programming"
-        android:textColor="@color/colorPrimaryDarker"
+        android:textColor="#FFFFFF"
         android:textSize="30dp"
         android:textStyle="bold"
         android:layout_below="@id/single_row_calendar"/>
@@ -36,8 +69,8 @@
         android:layout_height="1dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="12dp"
-        android:background="@color/colorPrimaryDark"
+        android:layout_marginBottom="16dp"
+        android:background="@color/bruinGreen"
         android:layout_below="@id/workout_title"/>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -13,10 +13,9 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorPrimaryDark"
+        app:cardBackgroundColor="@color/colorCard2"
         app:cardCornerRadius="15dp"
-        app:cardMaxElevation="1dp"
-        app:cardElevation="0.7dp"
+        app:cardElevation="12dp"
         app:contentPadding="5dp"
         app:contentPaddingBottom="15dp"
         app:contentPaddingTop="10dp"
@@ -36,7 +35,7 @@
                 android:id="@+id/item_workout_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
+                android:textColor="#FFFFFF"
                 android:textSize="22sp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
@@ -51,6 +50,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
                 android:textSize="12sp"
+                android:textColor="#99FFFFFF"
                 android:layout_below="@id/item_workout_type"
                 tools:text="High-Intensity Training" />
 
@@ -61,7 +61,8 @@
                 android:src="@drawable/baseline_chevron_down_white_36"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:fillColor="@android:color/white"/>
+                android:tint="@color/bruinGreen"
+                android:fillColor="@color/bruinGreen"/>
 
             <LinearLayout
                 android:id="@+id/sub_item"
@@ -78,8 +79,8 @@
                     android:textSize="18sp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:textStyle="bold"
                     android:fontFamily="sans-serif-medium"
+                    android:textColor="#DEFFFFFF"
                     tools:text="Genre: Crime, Drama, Thriller" />
 
                 <TextView
@@ -89,6 +90,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:textSize="18sp"
+                    android:textColor="#DEFFFFFF"
                     android:fontFamily="sans-serif-medium"
                     tools:text="Here lies the description of the workout" />
 
