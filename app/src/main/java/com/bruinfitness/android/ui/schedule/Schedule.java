@@ -5,6 +5,7 @@ public class Schedule {
     private String cityName;
     private String day;
     private String time;
+    private String workoutTypeHeader;
 
     public Schedule(){
         //public no-arg constructor needed
@@ -26,6 +27,17 @@ public class Schedule {
     public Schedule(String time, String day) {
         this.day = day;
         this.time = time;
+    }
+
+    public Schedule(String workoutTypeHeader) {
+        this.workoutTypeHeader = workoutTypeHeader;
+    }
+
+    /**
+     * Get the string workoutTypeHeader string.
+     */
+    public String getWorkoutTypeHeader() {
+        return this.workoutTypeHeader;
     }
 
     /**
@@ -58,4 +70,5 @@ public class Schedule {
     public void setTime(String time){
         this.time = time;
     }
+    public void setWorkoutTypeHeader(String workoutTypeHeader) {this.workoutTypeHeader = workoutTypeHeader;}
 }
