@@ -131,7 +131,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        //writeDummyWorkoutsToFirestore("2020_03_27");
+        //writeDummyWorkoutsToFirestore("2020_04_03");
 
         Calendar currDate = Calendar.getInstance();
         String currDateString = getDateString(currDate);
@@ -145,6 +145,8 @@ public class WorkoutCalendarFragment extends Fragment {
         // Check if we have already retrieved today's workout, if so no need to hit the DB
         if (recAdapter == null) {
             getFirestoreWorkouts(currDateString, recyclerView);
+        }else {
+            recyclerView.setAdapter(recAdapter);
         }
 
         return rootView;
@@ -435,8 +437,8 @@ public class WorkoutCalendarFragment extends Fragment {
         nestedDocFields.put("name", "Good Luck");
         nestedDocFields.put("goal", "win gold medals");
 
-        docData.put("CrossFit", nestedDocFields);
         docData.put("Gymnastics", nestedDocFields);
+        docData.put("CrossFit", nestedDocFields);
         docData.put("Weightlifting", nestedDocFields);
         Date firestoreDate = null;
         try {

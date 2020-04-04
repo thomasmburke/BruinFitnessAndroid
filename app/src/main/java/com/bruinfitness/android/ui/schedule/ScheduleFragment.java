@@ -2,12 +2,14 @@ package com.bruinfitness.android.ui.schedule;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,21 @@ import android.view.ViewGroup;
 import com.bruinfitness.android.R;
 import com.bruinfitness.android.ui.workoutcalendar.RecAdapter;
 import com.bruinfitness.android.ui.workoutcalendar.Workout;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +39,7 @@ import java.util.List;
 public class ScheduleFragment extends Fragment {
     private static final String TAG = "ScheduleFragment";
     private DocumentReference firestoreDb = FirebaseFirestore.getInstance().collection("schedules").document("Boston");
+    private HashMap<String, ScheduleRecAdapter> scheduleTypes = new HashMap<String, ScheduleRecAdapter>();
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -39,58 +51,80 @@ public class ScheduleFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
 
-        Schedule schedule0 = new Schedule("CrossFit");
-        Schedule schedule1 = new Schedule("10:00pm - 11:00pm", "Mon-Thurs");
-        Schedule schedule2 = new Schedule("7:00pm - 7:30pm", "Mon-Fri");
-        Schedule schedule3 = new Schedule("6:00pm - 7:00pm", "Mon-Fri");
-        Schedule schedule4 = new Schedule("10:00pm - 11:00pm", "Mon-Thurs");
-        Schedule schedule5 = new Schedule("7:00pm - 7:30pm", "Mon-Fri");
-        Schedule schedule6 = new Schedule("Weightlifting");
-        Schedule schedule7 = new Schedule("10:00pm - 11:00pm", "Mon-Thurs");
-        Schedule schedule8 = new Schedule("7:00pm - 7:30pm", "Mon-Fri");
-        Schedule schedule9 = new Schedule("6:00pm - 7:00pm", "Mon-Fri");
-        Schedule schedule10 = new Schedule("10:00pm - 11:00pm", "Mon-Thurs");
-        Schedule schedule11 = new Schedule("7:00pm - 7:30pm", "Mon-Fri");
-        Schedule schedule12 = new Schedule("6:00pm - 7:00pm", "Mon-Fri");
-        Schedule schedule13 = new Schedule("6:00pm - 7:00pm", "Mon-Fri");
-
-        List<Schedule> scheduleList = new ArrayList<>();
-        scheduleList.add(schedule0);
-        scheduleList.add(schedule1);
-        scheduleList.add(schedule2);
-        scheduleList.add(schedule3);
-        scheduleList.add(schedule4);
-        scheduleList.add(schedule5);
-        scheduleList.add(schedule6);
-        scheduleList.add(schedule7);
-        scheduleList.add(schedule8);
-        scheduleList.add(schedule9);
-        scheduleList.add(schedule10);
-        scheduleList.add(schedule11);
-        scheduleList.add(schedule12);
-        scheduleList.add(schedule13);
-        ScheduleRecAdapter adapter = new ScheduleRecAdapter(scheduleList);
-
-
-
+        // Setup Recycler View
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
 
-        /*
-        RecyclerView recyclerView2 = rootView.findViewById(R.id.recyclerView2);
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView2.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView2.setAdapter(adapter);
-        recyclerView2.setNestedScrollingEnabled(false);
-         */
+        ScheduleRecAdapter scheduleRecAdapter = scheduleTypes.get("allSchedules");
+        // Check if we have already retrieved today's schedule, if so no need to hit the DB
+        if (scheduleRecAdapter == null) {
+            getFirestoreSchedules(recyclerView);
+        } else {
+            recyclerView.setAdapter(scheduleRecAdapter);
+        }
 
         return rootView;
     }
 
+    public void getFirestoreSchedules(RecyclerView recyclerView){
+
+        /** Query specific Firestore collection **/
+        firestoreDb
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        // initialize a Schedule list for all types of workouts List
+                        List<Schedule> allScheduleList = new ArrayList<>();
+                        // Check if the query executed successfully
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            // If the document is not empty
+                            if (document.exists()) {
+                                // temporarily store document data
+                                Map<String, Object> tmpDoc = document.getData();
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
+                                // iterate through each map (WorkoutType) in the document
+                                for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
+                                    // Cast schedule list Object into a list
+                                    List workoutTypeScheduleList = (List) entry.getValue();
+                                    // Add the workout type header schedule for recyclerview
+                                    Schedule scheduleHeader = new Schedule(entry.getKey());
+                                    allScheduleList.add(scheduleHeader);
+
+                                    // Creating recycler adapters for each tab in the fragment
+                                    List<Schedule> workoutTypeTabScheduleList = new ArrayList<>();
+                                    workoutTypeTabScheduleList.add(scheduleHeader);
+
+                                    // Iterate through list of schedules
+                                    for (Object scheduleEntryObject : workoutTypeScheduleList) {
+                                        // Cast schedule hashmap object into hashmap
+                                        HashMap<String, String> scheduleEntry = (HashMap<String, String>) scheduleEntryObject;
+                                        Gson gson = new Gson();
+                                        JsonElement jsonElement = gson.toJsonTree(scheduleEntry);
+                                        Schedule schedule = gson.fromJson(jsonElement, Schedule.class);
+                                        allScheduleList.add(schedule);
+                                        workoutTypeTabScheduleList.add(schedule);
+                                    }
+                                    // Creating recycler adapters for each tab in the fragment
+                                    scheduleTypes.put(entry.getKey(), new ScheduleRecAdapter(workoutTypeTabScheduleList));
+                                }
+                                // Note HashMap put acts as both add and overwrite
+                                scheduleTypes.put("allSchedules", new ScheduleRecAdapter(allScheduleList));
+                                recyclerView.setAdapter(scheduleTypes.get("allSchedules"));
+                            } else {
+                                Log.d(TAG, "No such document: " + "allSchedules");
+                                scheduleTypes.put("allSchedules", new ScheduleRecAdapter(allScheduleList));
+                                Log.d(TAG, "Adding " + "allSchedules" + " Recycler View adapter to dateWorkouts Hashmap");
+                            }
+                        } else {
+                            Log.d(TAG, "get document failed with ", task.getException());
+                        }
+                    }
+                });
+    }
 
 }

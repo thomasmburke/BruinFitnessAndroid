@@ -64,15 +64,9 @@ public class MainActivity extends AppCompatActivity {
                         switchFragment(0, TAG_WORKOUT_CALENDAR);
                         break;
                     case R.id.navigation_schedule:
-                        //Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
-                        /*Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        startActivity(intent);
-                         */
                         switchFragment(1, TAG_SCHEDULE);
                         break;
                     case R.id.navigation_workoutcalendar2:
-                        //Toast.makeText(MainActivity.this, "Navigation", Toast.LENGTH_SHORT).show();
                         switchFragment(2, TAG_FRAGMENT_TRIPS);
                         break;
                 }
@@ -111,5 +105,4 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(scheduleFragment);
         fragments.add(tripsFragment);
     }
-
 }

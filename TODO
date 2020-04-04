@@ -5,17 +5,21 @@ Enhance workout data:
         - maybe allow users to store favorite workouts
     - add tags to workout documents to make them searchable
 - perform tests to see exactly how often the app is reading from the database
+- Fragment onDestroy is not always being called so should find another way to free listeners
 - sort workouts alphabetically by workout type
 - create gym news section
-- create schedule section
+- insert_graph or pie_chart icon for tab if stats page is built
+- Different tabs for the different schedules
 - Create Auth flow
     - sign in
     - sign out
 
 Nice to haves:
+- looks like I built something that already exists: https://github.com/firebase/FirebaseUI-Android/blob/master/firestore/README.md
 - provide view for when workout is not present for a given day
 - sliding motion between fragments instead of fading
 - only allow one box to be expanded at a time
+- for schedule select a city (v0.0.0 will only have one location)
 
 Release Tests:
 - upon release see if Workout class variables need to be public for Firebase toObject
