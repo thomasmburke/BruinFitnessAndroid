@@ -56,6 +56,13 @@ public class ScheduleFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // Add Firestore Schedule Listener
+        addFirestoreScheduleListener();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -66,9 +73,6 @@ public class ScheduleFragment extends Fragment {
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-
-        // Add Firestore Schedule Listener
-        addFirestoreScheduleListener();
 
         ScheduleRecAdapter scheduleRecAdapter = scheduleTypes.get("allSchedules");
         // Check if we have already retrieved today's schedule, if so no need to hit the DB
@@ -82,15 +86,17 @@ public class ScheduleFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onStop() {
+        super.onStop();
         if (scheduleRegistration != null) {
+            Log.i(TAG,"Detaching Schedule Firestore snapshot listener");
             scheduleRegistration.remove();
         }
-        Log.i(TAG,"Detaching Schedule Firestore snapshot listener");
+
     }
 
     public void addFirestoreScheduleListener(){
+        Log.i(TAG,"Attaching Schedule Firestore snapshot listener");
         scheduleRegistration = firestoreDb.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot document,
