@@ -56,7 +56,6 @@ public class ScheduleFragment extends Fragment {
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView.setNestedScrollingEnabled(false);
 
         ScheduleRecAdapter scheduleRecAdapter = scheduleTypes.get("allSchedules");
         // Check if we have already retrieved today's schedule, if so no need to hit the DB
