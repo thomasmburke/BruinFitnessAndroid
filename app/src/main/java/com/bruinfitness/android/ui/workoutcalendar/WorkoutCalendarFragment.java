@@ -77,50 +77,15 @@ public class WorkoutCalendarFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        addFirestoreWorkoutListener();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG,"in onCreate");
-        Date date = new Date();
-        // Giving an extra day due to daylight savings time issues that could ensue
-        Date fifteenDaysBack = new Date(date.getTime() - (15 * DAY_IN_MS));
-        // NOTE: would a limit for the query potentially make sense here?
-        Log.i(TAG,"Attaching Firestore snapshot listener");
-
-        registration = firestoreDb
-            .whereGreaterThanOrEqualTo("date", fifteenDaysBack)
-            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value,
-                                    @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
-
-                    for (QueryDocumentSnapshot document : value) {
-                        List<Workout> workoutList = new ArrayList<>();
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
-                        // temporarily store document data
-                        Map<String, Object> tmpDoc = document.getData();
-                        // iterate through each map (WorkoutType) in the document
-                        for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
-                            // Convert each map in the document to a POJO object
-                            if (entry.getKey().equals("date")){continue;}
-                            Gson gson = new Gson();
-                            JsonElement jsonElement = gson.toJsonTree(entry.getValue());
-                            Workout workout = gson.fromJson(jsonElement, Workout.class);
-                            workout.setWorkoutType(entry.getKey());
-                            // Add each workout type to the workout list
-                            workoutList.add(workout);
-                        }
-                        // Note HashMap put acts as both add and overwrite
-                        dateWorkouts.put(document.getId(), new RecAdapter(orderWorkoutList(workoutList)));
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    }
-                    Log.d(TAG, "Workouts read by snapshot Listener: ");
-                }
-            });
-
     }
 
     @Override
@@ -133,7 +98,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        writeDummyWorkoutsToFirestore("2020_04_04");
+        //writeDummyWorkoutsToFirestore("2020_04_04");
 
         Calendar currDate = Calendar.getInstance();
         String currDateString = getDateString(currDate);
@@ -174,13 +139,17 @@ public class WorkoutCalendarFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG,"in onDestroy");
-        // Stop listening to changes
-        if (registration != null) {
-            registration.remove();
-        }
-        Log.i(TAG,"Detaching Firestore snapshot listener");
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Stop listening to changes
+        if (registration != null) {
+            Log.i(TAG,"Detaching Firestore Workout snapshot listener");
+            registration.remove();
+        }
+    }
 
     private void setupCalendar() {
         mv_calendar.setCalendarViewManager(new MyCalendarViewManager());
@@ -353,6 +322,50 @@ public class WorkoutCalendarFragment extends Fragment {
         return workoutList;
     }
 
+    public void addFirestoreWorkoutListener(){
+        Date date = new Date();
+        // Not setting the listener for previous days as only current or future days expect writes
+        //Date fifteenDaysBack = new Date(date.getTime() - (15 * DAY_IN_MS));
+        Date today = new Date(date.getTime());
+        // NOTE: would a limit for the query potentially make sense here?
+        Log.i(TAG,"Attaching Firestore Workout snapshot listener");
+
+        registration = firestoreDb
+                .whereGreaterThanOrEqualTo("date", today)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot document : value) {
+                            List<Workout> workoutList = new ArrayList<>();
+                            Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
+                            // temporarily store document data
+                            Map<String, Object> tmpDoc = document.getData();
+                            // iterate through each map (WorkoutType) in the document
+                            for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
+                                // Convert each map in the document to a POJO object
+                                if (entry.getKey().equals("date")){continue;}
+                                Gson gson = new Gson();
+                                JsonElement jsonElement = gson.toJsonTree(entry.getValue());
+                                Workout workout = gson.fromJson(jsonElement, Workout.class);
+                                workout.setWorkoutType(entry.getKey());
+                                // Add each workout type to the workout list
+                                workoutList.add(workout);
+                            }
+                            // Note HashMap put acts as both add and overwrite
+                            dateWorkouts.put(document.getId(), new RecAdapter(orderWorkoutList(workoutList)));
+                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        }
+                        Log.d(TAG, "Workouts read by snapshot Listener: ");
+                    }
+                });
+    }
+
     public void getFirestoreWorkouts(String date, RecyclerView recyclerView){
 
         /** Query specific Firestore collection **/
@@ -399,48 +412,6 @@ public class WorkoutCalendarFragment extends Fragment {
                 });
     }
 
-    public void getFirestoreWorkouts(String date){
-        /** Query specific Firestore collection **/
-        firestoreDb.document(date)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        // initialize a new Workout List
-                        List<Workout> workoutList = new ArrayList<>();
-                        // Check if the query executed successfully
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            // If the document is not empty
-                            if (document.exists()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
-                                // temporarily store document data
-                                Map<String, Object> tmpDoc = document.getData();
-                                // iterate through each map (WorkoutType) in the document
-                                for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
-                                    // Convert each map in the document to a POJO object
-                                    Gson gson = new Gson();
-                                    JsonElement jsonElement = gson.toJsonTree(entry.getValue());
-                                    Workout workout = gson.fromJson(jsonElement, Workout.class);
-                                    workout.setWorkoutType(entry.getKey());
-                                    // Add each workout type to the workout list
-                                    workoutList.add(workout);
-                                }
-                                // Note HashMap put acts as both add and overwrite
-                                dateWorkouts.put(date, new RecAdapter(orderWorkoutList(workoutList)));
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                            } else {
-                                // TODO: add an offline message to the user and check if a document already exists?
-                                Log.d(TAG, "No such document: " + date);
-                                dateWorkouts.put(date, new RecAdapter(orderWorkoutList(workoutList)));
-                                Log.d(TAG, "Adding " + date + " Recycler View adapter to dateWorkouts Hashmap");
-                            }
-                        } else {
-                            Log.d(TAG, "get document failed with ", task.getException());
-                        }
-                    }
-                });
-    }
 
 
     public void writeDummyWorkoutsToFirestore(String dateString){
