@@ -43,6 +43,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +114,7 @@ public class WorkoutCalendarFragment extends Fragment {
                             workoutList.add(workout);
                         }
                         // Note HashMap put acts as both add and overwrite
-                        dateWorkouts.put(document.getId(), new RecAdapter(workoutList));
+                        dateWorkouts.put(document.getId(), new RecAdapter(orderWorkoutList(workoutList)));
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     }
                     Log.d(TAG, "Workouts read by snapshot Listener: ");
@@ -131,7 +133,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        //writeDummyWorkoutsToFirestore("2020_04_03");
+        writeDummyWorkoutsToFirestore("2020_04_04");
 
         Calendar currDate = Calendar.getInstance();
         String currDateString = getDateString(currDate);
@@ -339,6 +341,18 @@ public class WorkoutCalendarFragment extends Fragment {
                 });
     }
 
+    public List<Workout> orderWorkoutList(List<Workout> workoutList){
+        if (workoutList.size() > 0) {
+            Collections.sort(workoutList, new Comparator<Workout>() {
+                @Override
+                public int compare(final Workout object1, final Workout object2) {
+                    return object1.getWorkoutType().compareTo(object2.getWorkoutType());
+                }
+            });
+        }
+        return workoutList;
+    }
+
     public void getFirestoreWorkouts(String date, RecyclerView recyclerView){
 
         /** Query specific Firestore collection **/
@@ -369,13 +383,13 @@ public class WorkoutCalendarFragment extends Fragment {
                                     workoutList.add(workout);
                                 }
                                 // Note HashMap put acts as both add and overwrite
-                                dateWorkouts.put(date, new RecAdapter(workoutList));
+                                dateWorkouts.put(date, new RecAdapter(orderWorkoutList(workoutList)));
                                 recyclerView.setAdapter(dateWorkouts.get(date));
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                             } else {
                                 // TODO: add an offline message to the user and check if a document already exists?
                                 Log.d(TAG, "No such document: " + date);
-                                dateWorkouts.put(date, new RecAdapter(workoutList));
+                                dateWorkouts.put(date, new RecAdapter(orderWorkoutList(workoutList)));
                                 Log.d(TAG, "Adding " + date + " Recycler View adapter to dateWorkouts Hashmap");
                             }
                         } else {
@@ -413,12 +427,12 @@ public class WorkoutCalendarFragment extends Fragment {
                                     workoutList.add(workout);
                                 }
                                 // Note HashMap put acts as both add and overwrite
-                                dateWorkouts.put(date, new RecAdapter(workoutList));
+                                dateWorkouts.put(date, new RecAdapter(orderWorkoutList(workoutList)));
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                             } else {
                                 // TODO: add an offline message to the user and check if a document already exists?
                                 Log.d(TAG, "No such document: " + date);
-                                dateWorkouts.put(date, new RecAdapter(workoutList));
+                                dateWorkouts.put(date, new RecAdapter(orderWorkoutList(workoutList)));
                                 Log.d(TAG, "Adding " + date + " Recycler View adapter to dateWorkouts Hashmap");
                             }
                         } else {

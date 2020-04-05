@@ -6,7 +6,6 @@ Enhance workout data:
     - add tags to workout documents to make them searchable
 - perform tests to see exactly how often the app is reading from the database
 - Fragment onDestroy is not always being called so should find another way to free listeners
-- sort workouts alphabetically by workout type
 - create gym news section
 - insert_graph or pie_chart icon for tab if stats page is built
 - Different tabs for the different schedules
