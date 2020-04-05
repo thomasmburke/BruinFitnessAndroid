@@ -1,5 +1,5 @@
 TODOs:
-- setup Listen only from today to the end of the week
+- Set workout listener timezone to timezone of the gym or UTC
 Enhance workout data:
     - ability for users to star / heart workouts 
         - allows for tracking of what workouts users liked

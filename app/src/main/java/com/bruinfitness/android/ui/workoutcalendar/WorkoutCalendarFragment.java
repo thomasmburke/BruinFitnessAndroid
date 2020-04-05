@@ -41,6 +41,9 @@ import com.michalsvec.singlerowcalendar.utils.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -210,6 +213,30 @@ public class WorkoutCalendarFragment extends Fragment {
 
     }
 
+    /**
+     * Date methods
+     */
+
+    public Date atEndOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTime();
+    }
+
+    public Date atStartOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
     public HashMap<String, Integer> gatherCalendarConfigurations(){
         HashMap<String, Integer> calendarConfig = new HashMap<String, Integer>();
         Calendar calendar = Calendar.getInstance();
@@ -287,28 +314,14 @@ public class WorkoutCalendarFragment extends Fragment {
         }
     }
 
+    /**
+     * Utility methods
+     */
+
     public String getDateString (Calendar date){
         return dateFormatter.format(date.getTime());
     }
 
-    public void queryWithDateFilter(Date date2){
-        firestoreDb
-                .whereGreaterThanOrEqualTo("date", date2)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        // initialize a new Workout List
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }
 
     public List<Workout> orderWorkoutList(List<Workout> workoutList){
         if (workoutList.size() > 0) {
@@ -322,16 +335,24 @@ public class WorkoutCalendarFragment extends Fragment {
         return workoutList;
     }
 
+    /**
+     * Firestore methods
+     */
+
     public void addFirestoreWorkoutListener(){
         Date date = new Date();
-        // Not setting the listener for previous days as only current or future days expect writes
-        //Date fifteenDaysBack = new Date(date.getTime() - (15 * DAY_IN_MS));
-        Date today = new Date(date.getTime());
-        // NOTE: would a limit for the query potentially make sense here?
+        // TODO: These dates assume the timezone the user is in, but it should be the timezone the gym is in or UTC
+        Date today = atStartOfDay(new Date(date.getTime()));
+        int futureDays = gatherCalendarConfigurations().get("futureDaysCount");
+        Date endOfWeek = atEndOfDay(new Date(date.getTime() + (futureDays * DAY_IN_MS)));
         Log.i(TAG,"Attaching Firestore Workout snapshot listener");
 
+        // Add a snapshot listener for today until the end of the week
+        // No need to update workouts that haven't been released yet or have already happened
         registration = firestoreDb
                 .whereGreaterThanOrEqualTo("date", today)
+                .whereLessThanOrEqualTo("date", endOfWeek)
+                .limit(7)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
