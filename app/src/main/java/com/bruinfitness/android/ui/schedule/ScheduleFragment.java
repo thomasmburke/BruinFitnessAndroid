@@ -3,6 +3,7 @@ package com.bruinfitness.android.ui.schedule;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,7 +23,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -40,9 +44,15 @@ public class ScheduleFragment extends Fragment {
     private static final String TAG = "ScheduleFragment";
     private DocumentReference firestoreDb = FirebaseFirestore.getInstance().collection("schedules").document("Boston");
     private HashMap<String, ScheduleRecAdapter> scheduleTypes = new HashMap<String, ScheduleRecAdapter>();
+    private ListenerRegistration scheduleRegistration;
 
     public ScheduleFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -57,6 +67,9 @@ public class ScheduleFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
+        // Add Firestore Schedule Listener
+        addFirestoreScheduleListener();
+
         ScheduleRecAdapter scheduleRecAdapter = scheduleTypes.get("allSchedules");
         // Check if we have already retrieved today's schedule, if so no need to hit the DB
         if (scheduleRecAdapter == null) {
@@ -66,6 +79,66 @@ public class ScheduleFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (scheduleRegistration != null) {
+            scheduleRegistration.remove();
+        }
+        Log.i(TAG,"Detaching Schedule Firestore snapshot listener");
+    }
+
+    public void addFirestoreScheduleListener(){
+        scheduleRegistration = firestoreDb.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot document,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+                if (document != null && document.exists()) {
+                    List<Schedule> allScheduleList = new ArrayList<>();
+                    Log.d(TAG, "Current data: " + document.getData());
+                    // temporarily store document data
+                    Map<String, Object> tmpDoc = document.getData();
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getId() + " => " + document.getData());
+                    // iterate through each map (WorkoutType) in the document
+                    for (Map.Entry<String, Object> entry : tmpDoc.entrySet()) {
+                        // Cast schedule list Object into a list
+                        List workoutTypeScheduleList = (List) entry.getValue();
+                        // Add the workout type header schedule for recyclerview
+                        Schedule scheduleHeader = new Schedule(entry.getKey());
+                        allScheduleList.add(scheduleHeader);
+
+                        // Creating recycler adapters for each tab in the fragment
+                        List<Schedule> workoutTypeTabScheduleList = new ArrayList<>();
+                        workoutTypeTabScheduleList.add(scheduleHeader);
+
+                        // Iterate through list of schedules
+                        for (Object scheduleEntryObject : workoutTypeScheduleList) {
+                            // Cast schedule hashmap object into hashmap
+                            HashMap<String, String> scheduleEntry = (HashMap<String, String>) scheduleEntryObject;
+                            Gson gson = new Gson();
+                            JsonElement jsonElement = gson.toJsonTree(scheduleEntry);
+                            Schedule schedule = gson.fromJson(jsonElement, Schedule.class);
+                            allScheduleList.add(schedule);
+                            workoutTypeTabScheduleList.add(schedule);
+                        }
+                        // Creating recycler adapters for each tab in the fragment
+                        scheduleTypes.put(entry.getKey(), new ScheduleRecAdapter(workoutTypeTabScheduleList));
+                    }
+                    // Note HashMap put acts as both add and overwrite
+                    scheduleTypes.put("allSchedules", new ScheduleRecAdapter(allScheduleList));
+                    scheduleTypes.get("allSchedules").notifyDataSetChanged();
+
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
     }
 
     public void getFirestoreSchedules(RecyclerView recyclerView){
