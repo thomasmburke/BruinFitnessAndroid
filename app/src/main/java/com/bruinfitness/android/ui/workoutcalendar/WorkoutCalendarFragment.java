@@ -101,7 +101,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        //writeDummyWorkoutsToFirestore("2020_04_04");
+        writeDummyWorkoutsToFirestore("2020_04_06");
 
         Calendar currDate = Calendar.getInstance();
         String currDateString = getDateString(currDate);
@@ -342,17 +342,20 @@ public class WorkoutCalendarFragment extends Fragment {
     public void addFirestoreWorkoutListener(){
         Date date = new Date();
         // TODO: These dates assume the timezone the user is in, but it should be the timezone the gym is in or UTC
-        Date today = atStartOfDay(new Date(date.getTime()));
-        int futureDays = gatherCalendarConfigurations().get("futureDaysCount");
+        //Date today = atStartOfDay(new Date(date.getTime()));
+        HashMap<String, Integer> calendarConfig = gatherCalendarConfigurations();
+        int futureDays = calendarConfig.get("futureDaysCount");
+        int pastDays = calendarConfig.get("pastDaysCount");
+        Date startofCalendarScroller = atStartOfDay(new Date(date.getTime() - (pastDays * DAY_IN_MS)));
         Date endOfWeek = atEndOfDay(new Date(date.getTime() + (futureDays * DAY_IN_MS)));
         Log.i(TAG,"Attaching Firestore Workout snapshot listener");
 
         // Add a snapshot listener for today until the end of the week
         // No need to update workouts that haven't been released yet or have already happened
         registration = firestoreDb
-                .whereGreaterThanOrEqualTo("date", today)
+                .whereGreaterThanOrEqualTo("date", startofCalendarScroller)
                 .whereLessThanOrEqualTo("date", endOfWeek)
-                .limit(7)
+                .limit(21)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,

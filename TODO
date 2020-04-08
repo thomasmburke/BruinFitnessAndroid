@@ -1,4 +1,6 @@
 TODOs:
+- without listening on older documents they don't get populated
+    - would be nice to cache results on device and try and reload their first
 - Set workout listener timezone to timezone of the gym or UTC
 Enhance workout data:
     - ability for users to star / heart workouts 
@@ -22,5 +24,4 @@ Nice to haves:
 - for schedule select a city (v0.0.0 will only have one location)
 
 Release Tests:
-- upon release see if Workout class variables need to be public for Firebase toObject
 
