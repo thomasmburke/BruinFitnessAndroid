@@ -20,7 +20,7 @@ Enhance workout data:
             - The membership signup email link should ideally be included in their gym registration email with context of what the link does
             - Web will not have a sign in/out
     - sign in
-    - sign out
+    - sign out button and associated flow
 
 Nice to haves:
 - looks like I built something that already exists: https://github.com/firebase/FirebaseUI-Android/blob/master/firestore/README.md

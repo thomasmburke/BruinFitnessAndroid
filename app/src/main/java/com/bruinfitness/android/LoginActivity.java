@@ -32,9 +32,11 @@ public class LoginActivity extends AppCompatActivity {
                 AuthUI.getInstance().
                         createSignInIntentBuilder()
                         .setAvailableProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.EmailBuilder().build()))
+                                new AuthUI.IdpConfig.EmailBuilder().setAllowNewAccounts(false).build()))
                         // TODO set theme here .setTheme(R.style.MyTheme)
                         // TODO set Bruin Fitness logo here .setLogo(R.drawable.firebase)
+                        // TODO: later enable smart lock after testing
+                        .setIsSmartLockEnabled(false)
                         .build(),
                 RC_SIGN_IN);
     }
