@@ -15,6 +15,8 @@ Enhance workout data:
 - Create Auth flow
     - Would like two ways to sign in:
         - email auth upon app installation or sign in/out
+            - if user is signing in for the first time, we need to instruct them to reset their password
+                - would be nice to update "Trouble signing in" textview https://github.com/firebase/FirebaseUI-Android/issues/229
         - email link authentication
             - This would require a Bruin Fitness webpage that tells users to click the link on their mobile device
             - The membership signup email link should ideally be included in their gym registration email with context of what the link does
@@ -29,6 +31,7 @@ Nice to haves:
 - only allow one box to be expanded at a time
 - for schedule select a city (v0.0.0 will only have one location)
 - email link verification
+- auth flow to use Bruin Fitness theme
 
 Release Tests:
 

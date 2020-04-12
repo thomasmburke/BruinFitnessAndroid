@@ -8,12 +8,11 @@
     <color name="colorCard">#000</color>
     <color name="colorAccent">#D81B60</color>
     -->
-    <color name="colorPrimary">#eef2f3</color>
-    <color name="colorPrimaryDark">#8e9eab</color>
+    <color name="colorPrimary">#272727</color>
+    <color name="colorPrimaryDark">#272727</color>
     <color name="colorPrimaryDarker">#36383A</color>
-    <color name="colorPrimaryDarkest">#161C30</color>
     <color name="colorCard">#312E2E</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#039509</color>
 
 
     <color name="primaryBackground">#121212</color>
