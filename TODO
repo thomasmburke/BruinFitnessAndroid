@@ -13,6 +13,12 @@ Enhance workout data:
 - insert_graph or pie_chart icon for tab if stats page is built
 - Different tabs for the different schedules
 - Create Auth flow
+    - Would like two ways to sign in:
+        - email auth upon app installation or sign in/out
+        - email link authentication
+            - This would require a Bruin Fitness webpage that tells users to click the link on their mobile device
+            - The membership signup email link should ideally be included in their gym registration email with context of what the link does
+            - Web will not have a sign in/out
     - sign in
     - sign out
 
@@ -22,6 +28,7 @@ Nice to haves:
 - sliding motion between fragments instead of fading
 - only allow one box to be expanded at a time
 - for schedule select a city (v0.0.0 will only have one location)
+- email link verification
 
 Release Tests:
 
