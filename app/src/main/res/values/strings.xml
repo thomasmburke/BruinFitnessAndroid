@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Bruin Fitness</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -7,4 +7,10 @@
     <string name="title_workoutcalendar">Workouts</string>
     <string name="title_schedule">schedule</string>
     <string name="title_notifications">Notifications</string>
+    <string name="fui_welcome_back_email_header" translation_description="Message for returning users">Welcome!</string>
+    <string name="fui_welcome_back_password_prompt_body" translation_description="Message to users that need to signin using existing email accounts">
+        An account exists for <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>
+        If you are a first time user please click \'Trouble signing in?\' to reset your password. Otherwise, enter your password.
+    </string>
+    <string name="fui_trouble_signing_in" translation_description="Link leading to forgot password flow">Trouble signing in?</string>
 </resources>
