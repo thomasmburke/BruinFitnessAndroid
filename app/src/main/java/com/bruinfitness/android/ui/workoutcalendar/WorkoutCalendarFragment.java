@@ -2,6 +2,7 @@ package com.bruinfitness.android.ui.workoutcalendar;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bruinfitness.android.MainActivity;
 import com.bruinfitness.android.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -101,7 +103,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        writeDummyWorkoutsToFirestore("2020_04_06");
+        writeDummyWorkoutsToFirestore("2020_04_18");
 
         Calendar currDate = Calendar.getInstance();
         String currDateString = getDateString(currDate);
@@ -118,7 +120,7 @@ public class WorkoutCalendarFragment extends Fragment {
         }else {
             recyclerView.setAdapter(recAdapter);
         }
-
+        //rootView.setBackgroundColor(getActivity().getResources().getColor(R.color.bruinGreen));
         return rootView;
     }
 
@@ -210,6 +212,7 @@ public class WorkoutCalendarFragment extends Fragment {
         mv_calendar.setInitialPositionIndex(calendarConfig.get("initialIndexPosition"));
         mv_calendar.init();
         mv_calendar.select(calendarConfig.get("select"));
+        //mv_calendar.setBackgroundColor(getActivity().getResources().getColor(R.color.calendarColor));
 
     }
 

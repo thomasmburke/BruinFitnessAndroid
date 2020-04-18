@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--Your comment
-    <color name="colorPrimary">#859398</color>
-    <color name="colorPrimaryDark">#283048</color>
-    <color name="colorPrimaryDarker">#1F263C</color>
-    <color name="colorPrimaryDarkest">#161C30</color>
-    <color name="colorCard">#000</color>
-    <color name="colorAccent">#D81B60</color>
-    -->
-    <color name="colorPrimary">#272727</color>
-    <color name="colorPrimaryDark">#272727</color>
-    <color name="colorPrimaryDarker">#36383A</color>
-    <color name="colorCard">#312E2E</color>
+    <color name="colorPrimary">#121212</color>
+    <color name="colorPrimaryDark">#121212</color>
+    <color name="colorPrimaryDarker">#121212</color>
     <color name="colorAccent">#039509</color>
 
 
     <color name="primaryBackground">#121212</color>
-    <color name="colorCard2">#272727</color>
+    <color name="calendarColor">#121212</color>
+    <color name="colorCard">#272727</color>
+    <color name="cardBorder">#36383A</color>
     <color name="bruinGreen">#039509</color>
 
 </resources>
