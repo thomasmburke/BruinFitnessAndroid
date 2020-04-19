@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryBackground</item>
         <item name="colorPrimaryDark">@color/primaryBackground</item>
@@ -10,6 +10,11 @@
         <item name="actionBarStyle">@style/BruinFitnessBarStyle</item>
         <item name="android:windowContentOverlay">@null</item>
 
+        <!-- Sets background to black for activity transitions -->
+        <item name="android:windowBackground">@color/primaryBackground</item>
+
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowEnterTransition">@android:transition/slide_left</item>
     </style>
 
     <style name="AuthenticationTheme" parent="FirebaseUI">

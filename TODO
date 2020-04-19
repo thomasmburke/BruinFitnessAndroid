@@ -1,5 +1,4 @@
 TODOs:
-- default theme seems to be screwed up
 - without listening on older documents they don't get populated
     - would be nice to cache results on device and try and reload their first
 - Set workout listener timezone to timezone of the gym or UTC
