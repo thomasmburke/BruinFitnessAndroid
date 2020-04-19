@@ -1,22 +1,27 @@
 package com.bruinfitness.android.ui.schedule;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bruinfitness.android.R;
 
 import java.util.List;
 
+
 public class ScheduleHeaderRecAdapter extends RecyclerView.Adapter<ScheduleHeaderRecAdapter.ScheduleHeaderRecViewHolder> {
 
     private List<String> mWorkoutTypeList;
+    private final Context mContext;
 
-    public ScheduleHeaderRecAdapter(List<String> workoutTypeList) {
+    public ScheduleHeaderRecAdapter(List<String> workoutTypeList, Context context) {
         this.mWorkoutTypeList = workoutTypeList;
+        this.mContext = context;
     }
 
     @Override
@@ -34,6 +39,7 @@ public class ScheduleHeaderRecAdapter extends RecyclerView.Adapter<ScheduleHeade
         holder.bind(workoutType);
 
         holder.itemView.setOnClickListener(v -> {
+
             notifyItemChanged(position);
         });
     }
@@ -54,6 +60,7 @@ public class ScheduleHeaderRecAdapter extends RecyclerView.Adapter<ScheduleHeade
 
         private void bind(String workoutType) {
             workout_type.setText(workoutType);
+            workout_type.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color.bruinGreen, null));
 
         }
     }

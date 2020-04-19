@@ -72,16 +72,6 @@ public class ScheduleFragment extends Fragment {
         // Setup Recycler View for workout schedule filters
         RecyclerView filterWorkoutScheduleRecyclerView = rootView.findViewById(R.id.filterWorkoutScheduleRecyclerView);
         ((SimpleItemAnimator) filterWorkoutScheduleRecyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
-
-        /*
-        LinearLayoutManager HorizontalLayout = new LinearLayoutManager(
-                getContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false);
-        filterWorkoutScheduleRecyclerView.setLayoutManager(HorizontalLayout);
-
-         */
-
         filterWorkoutScheduleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         filterWorkoutScheduleRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.HORIZONTAL));
         filterWorkoutScheduleRecyclerView.setHasFixedSize(true);
@@ -108,7 +98,7 @@ public class ScheduleFragment extends Fragment {
         workoutTypeFilters.add("Weightlifting");
         workoutTypeFilters.add("Open Gym");
 
-        ScheduleHeaderRecAdapter scheduleHeaderRecAdapter = new ScheduleHeaderRecAdapter(workoutTypeFilters);
+        ScheduleHeaderRecAdapter scheduleHeaderRecAdapter = new ScheduleHeaderRecAdapter(workoutTypeFilters, getContext());
         filterWorkoutScheduleRecyclerView.setAdapter(scheduleHeaderRecAdapter);
 
         return rootView;
