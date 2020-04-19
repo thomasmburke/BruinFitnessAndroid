@@ -12,9 +12,6 @@
 
         <!-- Sets background to black for activity transitions -->
         <item name="android:windowBackground">@color/primaryBackground</item>
-
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowEnterTransition">@android:transition/slide_left</item>
     </style>
 
     <style name="AuthenticationTheme" parent="FirebaseUI">

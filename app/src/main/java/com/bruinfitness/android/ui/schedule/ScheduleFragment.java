@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bruinfitness.android.MainActivity;
 import com.bruinfitness.android.R;
 import com.bruinfitness.android.ui.workoutcalendar.RecAdapter;
 import com.bruinfitness.android.ui.workoutcalendar.Workout;
@@ -68,11 +69,30 @@ public class ScheduleFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
 
-        // Setup Recycler View
+        // Setup Recycler View for workout schedule filters
+        RecyclerView filterWorkoutScheduleRecyclerView = rootView.findViewById(R.id.filterWorkoutScheduleRecyclerView);
+        ((SimpleItemAnimator) filterWorkoutScheduleRecyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
+
+        /*
+        LinearLayoutManager HorizontalLayout = new LinearLayoutManager(
+                getContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false);
+        filterWorkoutScheduleRecyclerView.setLayoutManager(HorizontalLayout);
+
+         */
+
+        filterWorkoutScheduleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        filterWorkoutScheduleRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.HORIZONTAL));
+        filterWorkoutScheduleRecyclerView.setHasFixedSize(true);
+
+
+        // Setup Recycler View for workout schedule list
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerView);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setHasFixedSize(true);
 
         ScheduleRecAdapter scheduleRecAdapter = scheduleTypes.get("allSchedules");
         // Check if we have already retrieved today's schedule, if so no need to hit the DB
@@ -81,6 +101,15 @@ public class ScheduleFragment extends Fragment {
         } else {
             recyclerView.setAdapter(scheduleRecAdapter);
         }
+
+        List<String> workoutTypeFilters = new ArrayList<>();;
+        workoutTypeFilters.add("All");
+        workoutTypeFilters.add("Crossfit");
+        workoutTypeFilters.add("Weightlifting");
+        workoutTypeFilters.add("Open Gym");
+
+        ScheduleHeaderRecAdapter scheduleHeaderRecAdapter = new ScheduleHeaderRecAdapter(workoutTypeFilters);
+        filterWorkoutScheduleRecyclerView.setAdapter(scheduleHeaderRecAdapter);
 
         return rootView;
     }

@@ -3,30 +3,16 @@ package com.bruinfitness.android;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.bruinfitness.android.ui.schedule.ScheduleFragment;
-import com.bruinfitness.android.ui.schedule.test;
 import com.bruinfitness.android.ui.workoutcalendar.WorkoutCalendarFragment;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -99,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private void buildFragmentsList() {
         WorkoutCalendarFragment callsFragment = new WorkoutCalendarFragment();
         ScheduleFragment scheduleFragment = new ScheduleFragment();
-        test tripsFragment = new test();
+        ScheduleFragment tripsFragment = new ScheduleFragment();
 
         fragments.add(callsFragment);
         fragments.add(scheduleFragment);

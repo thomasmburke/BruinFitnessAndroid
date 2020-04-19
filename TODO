@@ -24,7 +24,7 @@ Nice to haves:
 - only allow one box to be expanded at a time
 - for schedule select a city (v0.0.0 will only have one location)
 - email link verification
-- auth flow to use Bruin Fitness theme
+- https://gist.github.com/gabrielemariotti/4c189fb1124df4556058 to have headers stick in schedule fragment
 
 Release Tests:
 
