@@ -103,7 +103,7 @@ public class WorkoutCalendarFragment extends Fragment {
         FirebaseFirestore.setLoggingEnabled(true);
 
         //DELETE ME
-        writeDummyWorkoutsToFirestore("2020_04_18");
+        writeDummyWorkoutsToFirestore("2020_04_19");
 
         Calendar currDate = Calendar.getInstance();
         String currDateString = getDateString(currDate);

@@ -46,6 +46,7 @@ public class ScheduleFragment extends Fragment {
     private DocumentReference firestoreDb = FirebaseFirestore.getInstance().collection("schedules").document("Boston");
     private HashMap<String, ScheduleRecAdapter> scheduleTypes = new HashMap<String, ScheduleRecAdapter>();
     private ListenerRegistration scheduleRegistration;
+    private List<String> scheduleFilters = new ArrayList<>();
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -87,20 +88,13 @@ public class ScheduleFragment extends Fragment {
         ScheduleRecAdapter scheduleRecAdapter = scheduleTypes.get("All");
         // Check if we have already retrieved today's schedule, if so no need to hit the DB
         if (scheduleRecAdapter == null) {
-            getFirestoreSchedules(recyclerView);
+            getFirestoreSchedules(recyclerView, filterWorkoutScheduleRecyclerView);
         } else {
             recyclerView.setAdapter(scheduleRecAdapter);
+            // Set schedule filter adapter for its recycler view
+            ScheduleHeaderRecAdapter scheduleHeaderRecAdapter = new ScheduleHeaderRecAdapter(scheduleFilters, getContext(), recyclerView, scheduleTypes);
+            filterWorkoutScheduleRecyclerView.setAdapter(scheduleHeaderRecAdapter);
         }
-
-        List<String> workoutTypeFilters = new ArrayList<>();;
-        workoutTypeFilters.add("All");
-        workoutTypeFilters.add("Crossfit");
-        workoutTypeFilters.add("Open Gym");
-        workoutTypeFilters.add("WeightLifting");
-
-
-        ScheduleHeaderRecAdapter scheduleHeaderRecAdapter = new ScheduleHeaderRecAdapter(workoutTypeFilters, getContext(), recyclerView, scheduleTypes);
-        filterWorkoutScheduleRecyclerView.setAdapter(scheduleHeaderRecAdapter);
 
         return rootView;
     }
@@ -137,6 +131,7 @@ public class ScheduleFragment extends Fragment {
                         List workoutTypeScheduleList = (List) entry.getValue();
                         // Add the workout type header schedule for recyclerview
                         Schedule scheduleHeader = new Schedule(entry.getKey());
+
                         allScheduleList.add(scheduleHeader);
 
                         // Creating recycler adapters for each tab in the fragment
@@ -167,7 +162,7 @@ public class ScheduleFragment extends Fragment {
         });
     }
 
-    public void getFirestoreSchedules(RecyclerView recyclerView){
+    public void getFirestoreSchedules(RecyclerView recyclerView, RecyclerView filterWorkoutScheduleRecyclerView){
 
         /** Query specific Firestore collection **/
         firestoreDb
@@ -177,6 +172,8 @@ public class ScheduleFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         // initialize a Schedule list for all types of workouts List
                         List<Schedule> allScheduleList = new ArrayList<>();
+                        // Add schedule header to list
+                        scheduleFilters.add("All");
                         // Check if the query executed successfully
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
@@ -191,6 +188,8 @@ public class ScheduleFragment extends Fragment {
                                     List workoutTypeScheduleList = (List) entry.getValue();
                                     // Add the workout type header schedule for recyclerview
                                     Schedule scheduleHeader = new Schedule(entry.getKey());
+                                    // Add schedule header to list
+                                    scheduleFilters.add(entry.getKey());
                                     allScheduleList.add(scheduleHeader);
 
                                     // Creating recycler adapters for each tab in the fragment
@@ -213,6 +212,9 @@ public class ScheduleFragment extends Fragment {
                                 // Note HashMap put acts as both add and overwrite
                                 scheduleTypes.put("All", new ScheduleRecAdapter(allScheduleList));
                                 recyclerView.setAdapter(scheduleTypes.get("All"));
+                                // Set schedule filter adapter for its recycler view
+                                ScheduleHeaderRecAdapter scheduleHeaderRecAdapter = new ScheduleHeaderRecAdapter(scheduleFilters, getContext(), recyclerView, scheduleTypes);
+                                filterWorkoutScheduleRecyclerView.setAdapter(scheduleHeaderRecAdapter);
                             } else {
                                 Log.d(TAG, "No such document: " + "All");
                                 scheduleTypes.put("All", new ScheduleRecAdapter(allScheduleList));
