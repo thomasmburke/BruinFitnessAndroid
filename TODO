@@ -3,6 +3,8 @@ TODOs:
     - would be nice to cache results on device and try and reload their first
 - Set workout listener timezone to timezone of the gym or UTC
 Enhance workout data:
+    - workout memories. show users how they did the last time they did this workouts
+    - store user's PRs and remind them on a yearly basis
     - ability for users to star / heart workouts 
         - allows for tracking of what workouts users liked
         - maybe allow users to store favorite workouts
@@ -10,7 +12,6 @@ Enhance workout data:
 - perform tests to see exactly how often the app is reading from the database
 - create gym news section
 - insert_graph or pie_chart icon for tab if stats page is built
-- Different tabs for the different schedules
 - Create another Auth flow
         - email link authentication
             - This would require a Bruin Fitness webpage that tells users to click the link on their mobile device

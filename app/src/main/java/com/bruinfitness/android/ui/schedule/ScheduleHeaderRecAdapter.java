@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bruinfitness.android.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -18,10 +20,23 @@ public class ScheduleHeaderRecAdapter extends RecyclerView.Adapter<ScheduleHeade
 
     private List<String> mWorkoutTypeList;
     private final Context mContext;
+    private int mPrevPosition = 0;
+    private RecyclerView mRecyclerView;
+    private HashMap<String, ScheduleRecAdapter> mScheduleTypes;
 
-    public ScheduleHeaderRecAdapter(List<String> workoutTypeList, Context context) {
+    public void setmPrevPosition(int prevPosition){
+        this.mPrevPosition = prevPosition;
+    }
+
+    public int getmPrevPosition(){
+        return this.mPrevPosition;
+    }
+
+    public ScheduleHeaderRecAdapter(List<String> workoutTypeList, Context context, RecyclerView recyclerView, HashMap<String, ScheduleRecAdapter> scheduleTypes) {
         this.mWorkoutTypeList = workoutTypeList;
         this.mContext = context;
+        this.mRecyclerView = recyclerView;
+        this.mScheduleTypes = scheduleTypes;
     }
 
     @Override
@@ -37,11 +52,22 @@ public class ScheduleHeaderRecAdapter extends RecyclerView.Adapter<ScheduleHeade
         final String workoutType = mWorkoutTypeList.get(position);
 
         holder.bind(workoutType);
+        if(getmPrevPosition() == position){
+            holder.workout_type.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color.bruinGreen, null));
+        }else{
+            holder.workout_type.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color.white, null));
+        }
+
 
         holder.itemView.setOnClickListener(v -> {
-
+            notifyItemChanged(getmPrevPosition());
+            setmPrevPosition(position);
             notifyItemChanged(position);
+            ScheduleRecAdapter tmpAdapter = mScheduleTypes.get(holder.workout_type.getText().toString());
+            mRecyclerView.swapAdapter(tmpAdapter, true);
         });
+
+
     }
 
     @Override
@@ -60,7 +86,8 @@ public class ScheduleHeaderRecAdapter extends RecyclerView.Adapter<ScheduleHeade
 
         private void bind(String workoutType) {
             workout_type.setText(workoutType);
-            workout_type.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color.bruinGreen, null));
+
+           // workout_type.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color.white, null));
 
         }
     }

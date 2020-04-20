@@ -84,7 +84,7 @@ public class ScheduleFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setHasFixedSize(true);
 
-        ScheduleRecAdapter scheduleRecAdapter = scheduleTypes.get("allSchedules");
+        ScheduleRecAdapter scheduleRecAdapter = scheduleTypes.get("All");
         // Check if we have already retrieved today's schedule, if so no need to hit the DB
         if (scheduleRecAdapter == null) {
             getFirestoreSchedules(recyclerView);
@@ -95,10 +95,11 @@ public class ScheduleFragment extends Fragment {
         List<String> workoutTypeFilters = new ArrayList<>();;
         workoutTypeFilters.add("All");
         workoutTypeFilters.add("Crossfit");
-        workoutTypeFilters.add("Weightlifting");
         workoutTypeFilters.add("Open Gym");
+        workoutTypeFilters.add("WeightLifting");
 
-        ScheduleHeaderRecAdapter scheduleHeaderRecAdapter = new ScheduleHeaderRecAdapter(workoutTypeFilters, getContext());
+
+        ScheduleHeaderRecAdapter scheduleHeaderRecAdapter = new ScheduleHeaderRecAdapter(workoutTypeFilters, getContext(), recyclerView, scheduleTypes);
         filterWorkoutScheduleRecyclerView.setAdapter(scheduleHeaderRecAdapter);
 
         return rootView;
@@ -156,8 +157,8 @@ public class ScheduleFragment extends Fragment {
                         scheduleTypes.put(entry.getKey(), new ScheduleRecAdapter(workoutTypeTabScheduleList));
                     }
                     // Note HashMap put acts as both add and overwrite
-                    scheduleTypes.put("allSchedules", new ScheduleRecAdapter(allScheduleList));
-                    scheduleTypes.get("allSchedules").notifyDataSetChanged();
+                    scheduleTypes.put("All", new ScheduleRecAdapter(allScheduleList));
+                    scheduleTypes.get("All").notifyDataSetChanged();
 
                 } else {
                     Log.d(TAG, "Current data: null");
@@ -210,12 +211,12 @@ public class ScheduleFragment extends Fragment {
                                     scheduleTypes.put(entry.getKey(), new ScheduleRecAdapter(workoutTypeTabScheduleList));
                                 }
                                 // Note HashMap put acts as both add and overwrite
-                                scheduleTypes.put("allSchedules", new ScheduleRecAdapter(allScheduleList));
-                                recyclerView.setAdapter(scheduleTypes.get("allSchedules"));
+                                scheduleTypes.put("All", new ScheduleRecAdapter(allScheduleList));
+                                recyclerView.setAdapter(scheduleTypes.get("All"));
                             } else {
-                                Log.d(TAG, "No such document: " + "allSchedules");
-                                scheduleTypes.put("allSchedules", new ScheduleRecAdapter(allScheduleList));
-                                Log.d(TAG, "Adding " + "allSchedules" + " Recycler View adapter to dateWorkouts Hashmap");
+                                Log.d(TAG, "No such document: " + "All");
+                                scheduleTypes.put("All", new ScheduleRecAdapter(allScheduleList));
+                                Log.d(TAG, "Adding " + "All" + " Recycler View adapter to dateWorkouts Hashmap");
                             }
                         } else {
                             Log.d(TAG, "get document failed with ", task.getException());

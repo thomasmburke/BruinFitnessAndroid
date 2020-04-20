@@ -11,5 +11,6 @@
     <color name="colorCard">#272727</color>
     <color name="cardBorder">#36383A</color>
     <color name="bruinGreen">#039509</color>
+    <color name="white">#FFFFFF</color>
 
 </resources>
