@@ -4,15 +4,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="2dp">
+    android:padding="4dp">
 
     <TextView
         android:id="@+id/item_workout_type_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:layout_marginLeft="5dp"
+        android:textSize="16sp"
         android:layout_marginStart="10dp"
         tools:text="All" />
 

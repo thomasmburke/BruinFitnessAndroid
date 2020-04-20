@@ -1,6 +1,7 @@
 package com.bruinfitness.android.ui.schedule;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.bruinfitness.android.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.graphics.Typeface.BOLD;
 
 
 public class ScheduleHeaderRecAdapter extends RecyclerView.Adapter<ScheduleHeaderRecAdapter.ScheduleHeaderRecViewHolder> {
@@ -54,8 +57,10 @@ public class ScheduleHeaderRecAdapter extends RecyclerView.Adapter<ScheduleHeade
         holder.bind(workoutType);
         if(getmPrevPosition() == position){
             holder.workout_type.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color.bruinGreen, null));
+            holder.workout_type.setTypeface(null, BOLD);
         }else{
             holder.workout_type.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color.white, null));
+            holder.workout_type.setTypeface(null, Typeface.NORMAL);
         }
 
 
