@@ -24,7 +24,7 @@ android:orientation="vertical">
         android:layout_height="1dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:background="@color/bruinGreen"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -32,6 +32,15 @@ android:orientation="vertical">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"/>
+
+    <View
+        android:id="@+id/workout_filter_underline"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/bruinGreen"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
