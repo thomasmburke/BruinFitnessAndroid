@@ -11,6 +11,13 @@
         android:id="@+id/frame_fragmentholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/topBottomNavigation"/>
+
+    <View
+        android:id="@+id/topBottomNavigation"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"
         android:layout_above="@id/bottom_navigation"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
